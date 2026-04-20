@@ -1,0 +1,117 @@
+---
+/**
+ * CoordinateStrip.astro — top strip with lat/lon, region name, and optional plate number.
+ * Coordinates animate from 0.00 → actual value on mount (respects prefers-reduced-motion).
+ */
+
+interface Props {
+  lat: number;
+  lon: number;
+  regionName: string;
+  plateNumber?: number;
+}
+
+const { lat, lon, regionName, plateNumber } = Astro.props;
+
+function toRoman(n: number): string {
+  const vals = [1000,900,500,400,100,90,50,40,10,9,5,4,1];
+  const syms = ['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I'];
+  let result = '';
+  for (let i = 0; i < vals.length; i++) {
+    while (n >= vals[i]) { result += syms[i]; n -= vals[i]; }
+  }
+  return result;
+}
+
+const latDir = lat >= 0 ? 'N' : 'S';
+const lonDir = lon >= 0 ? 'E' : 'W';
+const latAbs = Math.abs(lat);
+const lonAbs = Math.abs(lon);
+const plateLabel = plateNumber != null ? `Plate ${toRoman(plateNumber)}` : '';
+---
+
+<div class="coord-strip" data-coord-strip>
+  <div class="coord-strip__line coord-label">
+    <span
+      data-coord-ticker
+      data-target={latAbs.toFixed(2)}
+      data-suffix={`°${latDir}`}
+    >{latAbs.toFixed(2)}°{latDir}</span>
+    <span class="coord-strip__sep"> · </span>
+    <span
+      data-coord-ticker
+      data-target={lonAbs.toFixed(2)}
+      data-suffix={`°${lonDir}`}
+    >{lonAbs.toFixed(2)}°{lonDir}</span>
+    <span class="coord-strip__sep"> · </span>
+    <span class="coord-strip__region">{regionName.toUpperCase()}</span>
+    {plateLabel && <><span class="coord-strip__sep"> · </span><span class="coord-strip__plate">{plateLabel}</span></>}
+  </div>
+  <div class="hairline hairline-strong coord-strip__rule"></div>
+</div>
+
+<style>
+  .coord-strip {
+    padding-block: var(--space-3);
+  }
+  .coord-strip__line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0;
+    color: var(--rule-strong);
+    letter-spacing: var(--tracking-coord);
+  }
+  .coord-strip__region {
+    letter-spacing: var(--tracking-caps);
+    font-weight: 500;
+  }
+  .coord-strip__plate {
+    font-variant-numeric: tabular-nums;
+  }
+  .coord-strip__sep {
+    color: var(--rule);
+  }
+  .coord-strip__rule {
+    margin-top: var(--space-3);
+  }
+</style>
+
+<script is:inline>
+(function () {
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll('[data-coord-ticker]').forEach(function (el) {
+    var target = parseFloat(el.getAttribute('data-target'));
+    var suffix = el.getAttribute('data-suffix');
+
+    if (reduced || isNaN(target)) {
+      el.textContent = target.toFixed(2) + suffix;
+      return;
+    }
+
+    var start = null;
+    var duration = 400;
+    // ease-deliberate: cubic-bezier(0.4, 0, 0.2, 1) approximated via rAF
+    function ease(t) {
+      // cubic-bezier approximation
+      return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    }
+
+    function tick(ts) {
+      if (!start) start = ts;
+      var elapsed = ts - start;
+      var progress = Math.min(elapsed / duration, 1);
+      var value = ease(progress) * target;
+      el.textContent = value.toFixed(2) + suffix;
+      if (progress < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        el.textContent = target.toFixed(2) + suffix;
+      }
+    }
+
+    requestAnimationFrame(tick);
+  });
+})();
+</script>

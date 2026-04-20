@@ -1,0 +1,49 @@
+---
+/**
+ * RuleLine.astro — horizontal rule with optional centered label.
+ * weight: "hair" | "strong" | "dotted" (default: "hair")
+ */
+
+interface Props {
+  weight?: 'hair' | 'strong' | 'dotted';
+  label?: string;
+}
+
+const { weight = 'hair', label } = Astro.props;
+
+const cls = weight === 'strong'
+  ? 'hairline hairline-strong'
+  : weight === 'dotted'
+  ? 'hairline hairline-dotted'
+  : 'hairline';
+---
+
+{label ? (
+  <div class="rule-line rule-line--labeled">
+    <span class={cls + ' rule-line__segment'}></span>
+    <span class="rule-line__label caps">{label}</span>
+    <span class={cls + ' rule-line__segment'}></span>
+  </div>
+) : (
+  <hr class={cls + ' rule-line'} />
+)}
+
+<style>
+  .rule-line {
+    margin-block: var(--space-4);
+  }
+  .rule-line--labeled {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-block: var(--space-4);
+  }
+  .rule-line__segment {
+    flex: 1;
+  }
+  .rule-line__label {
+    white-space: nowrap;
+    color: var(--rule-strong);
+    flex-shrink: 0;
+  }
+</style>

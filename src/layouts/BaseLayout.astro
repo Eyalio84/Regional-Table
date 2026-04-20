@@ -1,0 +1,84 @@
+---
+/**
+ * BaseLayout.astro — HTML shell for every page.
+ *
+ * Props:
+ *   title       — <title> tag content (required)
+ *   description — <meta name="description"> content (optional; falls back to site default)
+ *
+ * Mounts: global.css, tokens.css, Google Fonts (DM Serif Display + DM Sans).
+ * The <body> carries data-region="neutral" as the default theme attribute;
+ * per-region pages override this to "neapolitan" | "lyonnais" | "cajun-creole" |
+ * "nyc-street-food" | "washoku". M0.5 populates region-specific CSS in tokens.css.
+ */
+import '../styles/global.css';
+import '../styles/tokens.css';
+import FloatingChefPill from '../components/atlas/FloatingChefPill.astro';
+import MasterChefModal from '../components/atlas/MasterChefModal.tsx';
+import DuotoneFilters from '../components/atlas/DuotoneFilters.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Per-region theme attribute placed on <body>. Defaults to "neutral". */
+  region?: 'neutral' | 'neapolitan' | 'lyonnais' | 'cajun-creole' | 'nyc-street-food' | 'washoku';
+}
+
+const {
+  title,
+  description = "The Regional Table — five regional cuisine experts, five distinct voices, one editorial kitchen.",
+  region = 'neutral',
+} = Astro.props;
+
+const siteUrl = import.meta.env.SITE ?? 'https://cuisine.verbalogix.com';
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph (populated more fully in M4) -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:type" content="website" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+
+    <!-- Google Fonts: preconnect first, then the stylesheet -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,800;1,9..40,400&display=swap"
+    />
+
+    <!-- noscript fallback: ensure critical content is readable without JS -->
+    <noscript>
+      <style>
+        [data-hydrate] { display: block !important; }
+      </style>
+    </noscript>
+  </head>
+  <body data-region={region}>
+    <DuotoneFilters />
+    <main>
+      <slot />
+    </main>
+    <SiteFooter />
+    <FloatingChefPill />
+    <MasterChefModal client:idle />
+  </body>
+</html>

@@ -1,0 +1,46 @@
+---
+/**
+ * PhotoCredit.astro — inline photo attribution line.
+ * Renders: "Photograph by <a>Name</a> on Unsplash"
+ */
+
+interface Props {
+  photographer: string;
+  photographerUrl: string;
+  source?: string;
+  align?: 'left' | 'center' | 'right';
+}
+
+const { photographer, photographerUrl, source = 'Unsplash', align = 'left' } = Astro.props;
+---
+
+<p class={`photo-credit caps photo-credit--${align}`}>
+  Photograph by{' '}
+  <a
+    href={photographerUrl}
+    class="photo-credit__link"
+    target="_blank"
+    rel="noopener noreferrer"
+  >{photographer}</a>
+  {' '}on {source}
+</p>
+
+<style>
+  .photo-credit {
+    color: var(--rule-strong);
+    margin: var(--space-2) 0;
+    display: block;
+  }
+  .photo-credit--left   { text-align: left; }
+  .photo-credit--center { text-align: center; }
+  .photo-credit--right  { text-align: right; }
+  .photo-credit__link {
+    color: var(--rule-strong);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+  .photo-credit__link:hover {
+    color: var(--accent);
+  }
+</style>

@@ -1,0 +1,58 @@
+---
+/**
+ * DuotoneFilters.astro — shared SVG <filter> definitions.
+ *
+ * Mount this ONCE per page (via BaseLayout). RegionalDuotone references
+ * the filter by id: `filter: url(#duotone-{region})`.
+ *
+ * Classic two-stop duotone:
+ *   1. feColorMatrix collapses RGB → luminance (grayscale)
+ *   2. feComponentTransfer with tableValues maps black→dark, white→light
+ *
+ * Dark and light values per region are chosen to carry distinct regional
+ * identity: Naples red+cream, Lyon bordeaux+bone, NOLA brick+ochre,
+ * NYC black+taxi-yellow, Japan sumi+washi, plus a subtle warm neutral.
+ *
+ * Values are normalized RGB (0–1), used as feComponentTransfer tableValues.
+ */
+
+const duotones = [
+  { id: 'neapolitan',      dark: [0.290, 0.102, 0.078], light: [0.996, 0.941, 0.816] }, // #4a1a14 → #fef0d0
+  { id: 'lyonnais',        dark: [0.239, 0.039, 0.063], light: [0.941, 0.894, 0.816] }, // #3d0a10 → #f0e4d0
+  { id: 'cajun-creole',    dark: [0.290, 0.125, 0.063], light: [0.894, 0.722, 0.459] }, // #4a2010 → #e4b875
+  { id: 'nyc-street-food', dark: [0.102, 0.102, 0.102], light: [0.961, 0.816, 0.251] }, // #1a1a1a → #f5d040
+  { id: 'washoku',         dark: [0.110, 0.110, 0.110], light: [0.910, 0.863, 0.784] }, // #1c1c1c → #e8dcc8
+  { id: 'neutral',         dark: [0.165, 0.141, 0.102], light: [0.769, 0.722, 0.596] }, // #2a241a → #c4b898
+];
+
+// Standard luminance weights (BT.709 approximation)
+const luminanceMatrix = `0.299 0.587 0.114 0 0
+                          0.299 0.587 0.114 0 0
+                          0.299 0.587 0.114 0 0
+                          0 0 0 1 0`;
+---
+
+<svg class="duotone-defs" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    {duotones.map((d) => (
+      <filter id={`duotone-${d.id}`} color-interpolation-filters="sRGB">
+        <feColorMatrix type="matrix" values={luminanceMatrix} />
+        <feComponentTransfer>
+          <feFuncR type="table" tableValues={`${d.dark[0]} ${d.light[0]}`} />
+          <feFuncG type="table" tableValues={`${d.dark[1]} ${d.light[1]}`} />
+          <feFuncB type="table" tableValues={`${d.dark[2]} ${d.light[2]}`} />
+        </feComponentTransfer>
+      </filter>
+    ))}
+  </defs>
+</svg>
+
+<style>
+  .duotone-defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+</style>

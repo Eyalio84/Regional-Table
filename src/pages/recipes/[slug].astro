@@ -1,0 +1,238 @@
+---
+/**
+ * [slug].astro — Atlas-plate recipe page template.
+ *
+ * getStaticPaths() reads the recipes content collection and generates one
+ * static page per MDX file. The atlas-plate layout composes:
+ *   CoordinateStrip (top) → hero split (title left, duotone photo right)
+ *   → RuleLine → cultural preamble (MDX body, drop-cap) → RuleLine
+ *   → atlas-plate split (SpecimenList left | MethodList right)
+ *   → integrity lines as LegendCallout → ExpertChatPanel island
+ *
+ * Time display: recipe.data.time.total is a string (e.g. "3 hours 30 minutes")
+ * rendered verbatim. Authored in frontmatter by Opus.
+ */
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CoordinateStrip from '../../components/atlas/CoordinateStrip.astro';
+import RuleLine from '../../components/atlas/RuleLine.astro';
+import LegendCallout from '../../components/atlas/LegendCallout.astro';
+import SpecimenList from '../../components/atlas/SpecimenList.astro';
+import MethodList from '../../components/atlas/MethodList.astro';
+import RegionalDuotone from '../../components/atlas/RegionalDuotone.astro';
+import PhotoCredit from '../../components/atlas/PhotoCredit.astro';
+import ExpertChatPanel from '../../components/chat/ExpertChatPanel.tsx';
+import { regionCoordinates } from '../../lib/regions';
+import type { RegionSlug } from '../../lib/regions';
+
+export async function getStaticPaths() {
+  const recipes = await getCollection('recipes');
+  return recipes.map((recipe) => ({
+    params: { slug: recipe.data.slug ?? recipe.id },
+    props: { recipe },
+  }));
+}
+
+const { recipe } = Astro.props;
+const { Content } = await render(recipe);
+const coords = regionCoordinates(recipe.data.region as RegionSlug);
+
+const REGION_LABELS: Record<string, string> = {
+  'neapolitan':      'Naples',
+  'lyonnais':        'Lyon',
+  'cajun-creole':    'New Orleans',
+  'nyc-street-food': 'New York',
+  'washoku':         'Japan',
+};
+const regionLabel = REGION_LABELS[recipe.data.region] ?? recipe.data.region;
+---
+
+<BaseLayout
+  title={`${recipe.data.title} — The Regional Table`}
+  description={recipe.data.seoDescription}
+  region={recipe.data.region as any}
+>
+  <article class="recipe-plate container">
+
+    <!-- Coordinate strip with plate number -->
+    <CoordinateStrip
+      lat={coords.lat}
+      lon={coords.lon}
+      regionName={recipe.data.region}
+      plateNumber={recipe.data.plateNumber}
+    />
+
+    <!-- Hero: title left + photo right on desktop, stacked on mobile -->
+    <header class="recipe-hero">
+      <div class="recipe-hero__text">
+        <p class="caps recipe-hero__backlink">
+          <a href={`/regions/${recipe.data.region}`}>« From the {regionLabel} kitchen</a>
+        </p>
+        <h1 class="display recipe-hero__title">{recipe.data.title}</h1>
+        <p class="caps recipe-hero__meta">
+          {recipe.data.servings} servings · {recipe.data.time.total} · {recipe.data.difficulty}
+        </p>
+      </div>
+      <figure class="recipe-hero__figure">
+        <img
+          src={recipe.data.heroImage}
+          alt={recipe.data.title}
+          class="recipe-hero__image"
+          loading="eager"
+          decoding="async"
+        />
+        <figcaption class="recipe-hero__credit">
+          <PhotoCredit
+            photographer={recipe.data.heroPhotographer}
+            photographerUrl={recipe.data.heroPhotographerUrl}
+            align="right"
+          />
+        </figcaption>
+      </figure>
+    </header>
+
+    <RuleLine weight="strong" />
+
+    <!-- Cultural preamble — MDX body renders here with drop-cap on first paragraph -->
+    <section class="recipe-preamble readable">
+      <Content />
+    </section>
+
+    <RuleLine weight="strong" label="SPECIMEN · METHOD" />
+
+    <!-- Atlas-plate split: SPECIMEN column + METHOD column -->
+    <div class="atlas-plate">
+      <aside class="atlas-plate__specimen">
+        <p class="caps atlas-plate__heading">Specimen</p>
+        <SpecimenList items={recipe.data.ingredients} />
+      </aside>
+      <section class="atlas-plate__method">
+        <p class="caps atlas-plate__heading">Method</p>
+        <MethodList items={recipe.data.method} />
+      </section>
+    </div>
+
+    {recipe.data.integrityLines.length > 0 && (
+      <>
+        <RuleLine weight="strong" label="INTEGRITY LINES" />
+        <section class="recipe-integrity">
+          {recipe.data.integrityLines.map((line) => (
+            <LegendCallout severity={line.severity} rule={line.rule} />
+          ))}
+        </section>
+      </>
+    )}
+
+    <RuleLine weight="strong" label="ASK THE EXPERT" />
+
+    <section class="recipe-chat">
+      <ExpertChatPanel
+        client:visible
+        regionId={recipe.data.region}
+        contextSeed={`You're looking at ${recipe.data.title}. Want to know how I'd do it differently?`}
+      />
+    </section>
+
+  </article>
+</BaseLayout>
+
+<style>
+  .recipe-plate { padding-block: var(--space-6) var(--space-9); }
+
+  .recipe-hero {
+    display: grid;
+    gap: var(--space-6);
+    margin-block: var(--space-7);
+  }
+  @media (min-width: 900px) {
+    .recipe-hero {
+      grid-template-columns: 1fr 1.1fr;
+      align-items: start;
+    }
+  }
+  .recipe-hero__backlink {
+    margin-block: 0 var(--space-3);
+    letter-spacing: var(--tracking-caps);
+    font-size: var(--fs-caps);
+  }
+  .recipe-hero__backlink a {
+    color: var(--rule-strong);
+    text-decoration: none;
+    transition: color var(--motion-fast) var(--ease-deliberate);
+  }
+  .recipe-hero__backlink a:hover {
+    color: var(--accent);
+  }
+  .recipe-hero__title {
+    font-family: var(--ff-serif);
+    font-size: var(--fs-display);
+    color: var(--fg);
+    margin-block: var(--space-2);
+    line-height: 1;
+  }
+  .recipe-hero__meta {
+    color: var(--rule-strong);
+    margin-top: var(--space-4);
+    letter-spacing: var(--tracking-caps);
+  }
+  .recipe-hero__figure { margin: 0; }
+  .recipe-hero__image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 2px;
+  }
+  .recipe-hero__credit { margin-top: var(--space-2); }
+
+  .recipe-preamble {
+    font-family: var(--ff-serif);
+    font-size: var(--fs-lede);
+    line-height: var(--lh-lede);
+    color: var(--fg);
+    padding-block: var(--space-7);
+    max-width: 68ch;
+  }
+  .recipe-preamble :global(p) { margin-block: 0 var(--space-5); }
+  .recipe-preamble :global(p:last-child) { margin-bottom: 0; }
+  .recipe-preamble :global(p:first-child::first-letter) {
+    font-family: var(--ff-serif);
+    float: left;
+    font-size: calc(var(--fs-display) * 0.65);
+    line-height: 0.9;
+    padding-top: 0.08em;
+    padding-right: 0.12em;
+    color: var(--accent);
+  }
+
+  .atlas-plate {
+    display: grid;
+    gap: var(--space-7);
+    margin-block: var(--space-6);
+  }
+  @media (min-width: 900px) {
+    .atlas-plate {
+      grid-template-columns: 1fr 2fr;
+      gap: var(--space-8);
+    }
+  }
+  .atlas-plate__heading {
+    color: var(--accent);
+    margin-bottom: var(--space-4);
+    margin-top: 0;
+    letter-spacing: var(--tracking-caps);
+  }
+
+  .recipe-integrity {
+    display: grid;
+    gap: var(--space-4);
+    padding-block: var(--space-6);
+  }
+
+  .recipe-chat {
+    padding-block: var(--space-6);
+    min-height: 420px;
+    border: 1px solid var(--rule-faint);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+</style>

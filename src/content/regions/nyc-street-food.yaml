@@ -1,0 +1,138 @@
+id: nyc-street-food
+displayName: "NYC Street Food"
+cuisineFamily: American Street
+expertVoice: "NYC Street Food Veteran"
+coordinates:
+  lat: 40.71
+  lon: -74.01
+  city: New York
+
+voiceDescription: >
+  A fast-talking NYC street food vendor who has been working carts since the mid-80s — started
+  on a hot dog cart in Midtown, graduated to his own operation, and now knows every vendor,
+  every corner, every health inspector by first name. He talks the way New Yorkers walk: fast,
+  direct, no wasted motion. Encyclopedic knowledge delivered at auctioneer speed. Fiercely
+  opinionated about what is real and what is tourist garbage. He has seen the pushcart era die
+  and the food truck era rise. He knows the difference between a line that means quality and a
+  line that means marketing. He will tell you exactly where to eat and exactly where not to eat,
+  and he will not sugarcoat it. His hands smell like grilled onions and cumin. He has a bodega
+  cat named Frankie.
+
+voiceQuote: "Yo — what do you wanna know? I been out here since the 80s. You want the real deal or the tourist version?"
+
+shortBlurb: "Dirty water dogs to dollar slices — the immigrant engine that feeds 8 million people."
+
+legendaryTechniques:
+  - name: "Dirty Water Hot Dog"
+    skillLevel: beginner
+    description: >
+      The 'dirty water' is not an insult — it is the technique. The franks simmer in a seasoned
+      broth of beef stock, ketchup, red wine vinegar, nutmeg, garlic, and accumulated cooking juices
+      from all-day simmering.
+  - name: "NYC Bagel (Boiled)"
+    skillLevel: intermediate
+    description: >
+      The New York bagel's superiority is genuinely contested by food scientists. NYC tap water
+      comes from the Catskill and Delaware Watersheds with notably low mineral content, producing
+      a softer gluten structure.
+  - name: "Chopped Cheese"
+    skillLevel: beginner
+    description: >
+      The chopped cheese was born in the bodegas of Spanish Harlem, believed invented at Hajji's
+      Deli (Blue Sky Deli) in the 1990s — a burger chopped apart on the griddle, mixed with grilled
+      onions and American cheese.
+  - name: "Halal Cart Platter (White Sauce)"
+    skillLevel: intermediate
+    description: >
+      In 1990, three Egyptian immigrants opened a hot dog cart at West 53rd and 6th Avenue. Today
+      the Halal Guys serve thousands of platters a day. The white sauce — mayo, yogurt, vinegar,
+      herbs — is the defining element.
+  - name: "NY Pizza Slice (The Fold)"
+    skillLevel: intermediate
+    description: >
+      The first pizzeria in the United States was Lombardi's, opened by Neapolitan immigrant
+      Gennaro Lombardi in Little Italy in 1905. The NY slice evolved from that tradition into its
+      own form — thin, wide, foldable, coal or deck oven.
+
+integrityLines:
+  - rule: "If you fold the slice, you're from here. If you use a fork, you're not."
+    severity: absolute
+  - rule: "Ketchup on a hot dog is your business, but don't call it authentic NYC style"
+    severity: strong
+  - rule: "The bodega chopped cheese requires Goya adobo and sazon — no artisanal substitute"
+    severity: absolute
+  - rule: "An egg cream uses Fox's U-Bet chocolate syrup or it is not an egg cream"
+    severity: absolute
+  - rule: "Never order pizza in Times Square — walk three blocks in any direction first"
+    severity: strong
+  - rule: "The halal cart white sauce must be sharp with vinegar and thick — watery white sauce is a disqualifier"
+    severity: strong
+  - rule: "A BEC is ordered as one word — 'baconeggandcheese' — hesitation reveals you as an outsider"
+    severity: mild
+  - rule: "The best street food in the city is in Queens, not Manhattan — accept this or remain a tourist"
+    severity: strong
+  - rule: "A bagel is boiled then baked. If it was only baked, it is a bread roll with a hole in it."
+    severity: absolute
+  - rule: "If a subway car is empty during rush hour, there is a reason. Do not board it."
+    severity: absolute
+
+legendaryChefs:
+  - name: "Gennaro Lombardi"
+    era: "1905 (Lombardi's opened)"
+    significance: >
+      Neapolitan immigrant. Opened the first pizzeria in the United States at 53½ Spring Street,
+      Little Italy. Every NY slice descends from the coal-oven pie he sold for nickels.
+  - name: "The Halal Guys (Mohammed Abouelenein et al.)"
+    era: "1990 (cart opened)"
+    significance: >
+      Three Egyptian immigrants opened a hot dog cart at West 53rd and 6th to serve Muslim cab
+      drivers. The chicken-and-rice platter with white sauce now has franchises on four continents.
+  - name: "Hajji's Deli (Blue Sky Deli)"
+    era: "1990s (chopped cheese credited)"
+    significance: >
+      Spanish Harlem bodega widely credited with the chopped cheese. No chef, no restaurant —
+      just a griddle, a knife, and a sandwich that eventually got its own documentary.
+  - name: "Nathan Handwerker"
+    era: "1892–1974"
+    significance: >
+      Nathan's Famous, Coney Island. Polish immigrant who undercut the competition at 5¢ a hot dog
+      in 1916. The July 4th eating contest is theatre; the dog is the artefact.
+
+seasonalCalendar:
+  spring:
+    - "Queens Night Market opens (Saturdays, Flushing Meadows)"
+    - "Smorgasburg returns outdoors"
+    - "Street corn (elote) carts multiply on Roosevelt Avenue"
+  summer:
+    - "Peak cart season — every corner of Midtown occupied"
+    - "Nathan's July 4th hot dog eating contest at Coney Island"
+    - "Late-night halal cart lines peak"
+    - "Smorgasburg at full capacity"
+  fall:
+    - "Roasted chestnut carts appear across Midtown"
+    - "Nuts4Nuts shifts to holiday mode"
+    - "Queens Night Market final Saturdays"
+    - "Pebble-roasted chestnuts in Flushing from Chinese vendors"
+  winter:
+    - "Hot dog carts become essential warming stations"
+    - "Bodega BEC consumption peaks"
+    - "Indoor markets (Chelsea Market, Essex Market) become primary"
+    - "Egg cream nostalgia season"
+  year_round:
+    - "Pizza slices (always)"
+    - "Bodega BEC and chopped cheese (always)"
+    - "Halal carts (always — until 4am)"
+    - "Dirty water dogs (always)"
+
+culturalNote: >
+  The Vendy Awards — the James Beard Awards of the street — have been recognising NYC cart and
+  truck vendors since 2005. The best food in the city has always come from immigrants cooking
+  what they know.
+
+sacredIngredients:
+  - "Sabrett All-Beef Franks"
+  - "Fox's U-Bet Chocolate Syrup"
+  - "NYC Tap Water"
+  - "Goya Adobo and Sazon"
+  - "American Cheese (Sliced)"
+  - "The Kaiser Roll (Hard Roll)"

@@ -1,0 +1,262 @@
+---
+/**
+ * [slug].astro — dynamic region landing page.
+ *
+ * getStaticPaths() reads the regions content collection (5 YAML files)
+ * and returns one path per region. The data-region attribute on <body>
+ * is passed through BaseLayout's region prop, enabling per-region
+ * theme swaps via tokens.css.
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RegionHero from '../../components/atlas/RegionHero.astro';
+import LegendCallout from '../../components/atlas/LegendCallout.astro';
+import RuleLine from '../../components/atlas/RuleLine.astro';
+import ExpertChatPanel from '../../components/chat/ExpertChatPanel.tsx';
+import { regionCoordinates } from '../../lib/regions';
+import type { RegionSlug } from '../../lib/regions';
+
+export async function getStaticPaths() {
+  const regions = await getCollection('regions');
+  const recipes = await getCollection('recipes');
+  return regions.map((r) => ({
+    params: { slug: r.data.id },
+    props: {
+      region: r.data,
+      recipes: recipes
+        .filter((rec) => rec.data.region === r.data.id)
+        .sort((a, b) => a.data.plateNumber - b.data.plateNumber)
+        .map((rec) => ({
+          slug: rec.data.slug ?? rec.id,
+          title: rec.data.title,
+          plateNumber: rec.data.plateNumber,
+          heroImage: rec.data.heroImage,
+          total: rec.data.time.total,
+          difficulty: rec.data.difficulty,
+        })),
+    },
+  }));
+}
+
+const { region, recipes = [] } = Astro.props;
+const coords = regionCoordinates(region.id as RegionSlug);
+
+function toRoman(n: number): string {
+  const vals = [1000,900,500,400,100,90,50,40,10,9,5,4,1];
+  const syms = ['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I'];
+  let result = '';
+  for (let i = 0; i < vals.length; i++) {
+    while (n >= vals[i]) { result += syms[i]; n -= vals[i]; }
+  }
+  return result;
+}
+---
+
+<BaseLayout
+  title={`${region.displayName} — The Regional Table`}
+  description={region.shortBlurb}
+  region={region.id as any}
+>
+  <div class="region-page container">
+    <RegionHero
+      regionSlug={region.id as RegionSlug}
+      displayName={region.displayName}
+      expertVoice={region.expertVoice}
+      voiceQuote={region.voiceQuote}
+      coordinates={{ lat: coords.lat, lon: coords.lon, city: region.coordinates.city }}
+    />
+
+    <RuleLine weight="strong" label="INTEGRITY LINES" />
+
+    <section class="region-section">
+      {region.integrityLines.map((line) => (
+        <LegendCallout severity={line.severity} rule={line.rule} />
+      ))}
+    </section>
+
+    <RuleLine weight="strong" label="LEGENDARY CHEFS" />
+
+    <section class="region-section region-chefs">
+      {region.legendaryChefs.length > 0 ? (
+        region.legendaryChefs.map((chef) => (
+          <article class="chef-card">
+            <h3 class="chef-card__name">{chef.name}</h3>
+            <p class="chef-card__era caps">{chef.era}</p>
+            <p class="chef-card__significance">{chef.significance}</p>
+          </article>
+        ))
+      ) : (
+        <p class="region-section__empty caps">No named chefs — this tradition lives in the street.</p>
+      )}
+    </section>
+
+    {region.seasonalCalendar && (
+      <>
+        <RuleLine weight="strong" label="SEASONAL CALENDAR" />
+        <section class="region-section seasonal-strip">
+          {Object.entries(region.seasonalCalendar).map(([month, dishes]) => (
+            <div class="seasonal-month">
+              <p class="caps seasonal-month__label">{month.replace(/_/g, ' ')}</p>
+              <ul class="seasonal-month__list">
+                {dishes.map((d) => <li>{d}</li>)}
+              </ul>
+            </div>
+          ))}
+        </section>
+      </>
+    )}
+
+    {recipes.length > 0 && (
+      <>
+        <RuleLine weight="strong" label="PLATES FROM THIS KITCHEN" />
+        <section class="region-section region-plates">
+          {recipes.map((r) => (
+            <a href={`/recipes/${r.slug}`} class="plate-card">
+              <div class="plate-card__thumb">
+                <img src={r.heroImage} alt={r.title} loading="lazy" decoding="async" />
+              </div>
+              <div class="plate-card__body">
+                <p class="caps plate-card__plate">Plate {toRoman(r.plateNumber)}</p>
+                <h3 class="plate-card__title">{r.title}</h3>
+                <p class="caps plate-card__meta">{r.total} · {r.difficulty}</p>
+              </div>
+            </a>
+          ))}
+        </section>
+      </>
+    )}
+
+    <RuleLine weight="strong" label={`ASK ${region.expertVoice.toUpperCase()}`} />
+
+    <section class="region-section region-chat">
+      <ExpertChatPanel
+        client:visible
+        regionId={region.id}
+        contextSeed={`You've landed in ${region.coordinates.city}. What do you want to understand?`}
+      />
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .region-page {
+    padding-block: var(--space-7);
+  }
+
+  .region-section {
+    padding-block: var(--space-6);
+  }
+
+  .region-section__empty {
+    color: var(--rule-strong);
+    padding-block: var(--space-4);
+  }
+
+  .region-chefs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-5);
+  }
+
+  .chef-card {
+    padding: var(--space-4);
+    border-left: 2px solid var(--accent);
+  }
+
+  .chef-card__name {
+    font-family: var(--ff-serif);
+    font-size: var(--fs-h3);
+    margin-bottom: var(--space-1);
+    color: var(--fg);
+  }
+
+  .chef-card__era {
+    color: var(--rule-strong);
+    margin-bottom: var(--space-2);
+    margin-top: 0;
+  }
+
+  .chef-card__significance {
+    font-size: var(--fs-sm);
+    line-height: var(--lh-lede);
+    margin: 0;
+  }
+
+  .region-plates {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-5);
+  }
+  .plate-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: transform var(--motion-fast) var(--ease-deliberate);
+  }
+  .plate-card:hover .plate-card__title {
+    color: var(--accent);
+  }
+  .plate-card__thumb {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    margin-bottom: var(--space-3);
+  }
+  .plate-card__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .plate-card__plate {
+    color: var(--rule-strong);
+    letter-spacing: var(--tracking-caps);
+    margin: 0 0 var(--space-1);
+    font-size: var(--fs-caps);
+  }
+  .plate-card__title {
+    font-family: var(--ff-serif);
+    font-size: var(--fs-h3);
+    color: var(--fg);
+    margin: 0 0 var(--space-2);
+    line-height: 1.2;
+    transition: color var(--motion-fast) var(--ease-deliberate);
+  }
+  .plate-card__meta {
+    color: var(--rule-strong);
+    font-size: var(--fs-caps);
+    letter-spacing: var(--tracking-caps);
+    margin: 0;
+  }
+
+  .seasonal-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--space-4);
+  }
+
+  .seasonal-month__label {
+    color: var(--accent);
+    margin-bottom: var(--space-2);
+    margin-top: 0;
+  }
+
+  .seasonal-month__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: var(--fs-sm);
+    line-height: var(--lh-lede);
+  }
+
+  .seasonal-month__list li {
+    padding-block: var(--space-1);
+    border-bottom: 1px dotted var(--rule-faint);
+  }
+
+  .region-chat {
+    min-height: 480px;
+    border: 1px solid var(--rule-faint);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+</style>

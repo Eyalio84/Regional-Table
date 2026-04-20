@@ -1,0 +1,113 @@
+---
+/**
+ * SiteFooter.astro — persistent page footer.
+ *
+ * Rendered in BaseLayout. Carries navigation, issue metadata, and
+ * architecture link-back. Deliberately minimal — navigational spine,
+ * not a content surface.
+ */
+import RuleLine from './atlas/RuleLine.astro';
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner container">
+
+    <RuleLine weight="strong" />
+
+    <nav class="site-footer__nav" aria-label="Site">
+      <div class="site-footer__section">
+        <p class="caps site-footer__label">Kitchens</p>
+        <ul>
+          <li><a href="/regions/neapolitan">Naples</a></li>
+          <li><a href="/regions/lyonnais">Lyon</a></li>
+          <li><a href="/regions/cajun-creole">New Orleans</a></li>
+          <li><a href="/regions/nyc-street-food">New York</a></li>
+          <li><a href="/regions/washoku">Japan</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__section">
+        <p class="caps site-footer__label">Browse</p>
+        <ul>
+          <li><a href="/">Homepage</a></li>
+          <li><a href="/regions/">All kitchens</a></li>
+          <li><a href="/recipes/">All plates</a></li>
+          <li><a href="/ask">Master Chef</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__section">
+        <p class="caps site-footer__label">The Publication</p>
+        <ul>
+          <li><a href="/about">About</a></li>
+          <li><a href="/colophon">Colophon</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="site-footer__masthead">
+      <p class="site-footer__wordmark">The Regional Table</p>
+      <p class="caps site-footer__issue">No. I · MMXXVI · Spring</p>
+    </div>
+
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-8);
+    padding-block: var(--space-7);
+    background-color: var(--bg);
+    color: var(--fg);
+  }
+  .site-footer__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-7);
+  }
+  .site-footer__nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-6);
+    padding-block: var(--space-6);
+  }
+  .site-footer__section ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .site-footer__section li {
+    padding-block: var(--space-1);
+  }
+  .site-footer__section a {
+    font-family: var(--ff-serif);
+    font-size: var(--fs-body);
+    color: var(--fg);
+    text-decoration: none;
+    transition: color var(--motion-fast) var(--ease-deliberate);
+  }
+  .site-footer__section a:hover {
+    color: var(--accent);
+  }
+  .site-footer__label {
+    color: var(--accent);
+    letter-spacing: var(--tracking-caps);
+    margin-bottom: var(--space-3);
+    font-size: var(--fs-caps);
+  }
+  .site-footer__masthead {
+    text-align: center;
+    padding-top: var(--space-5);
+    border-top: var(--rule-width) solid var(--rule);
+  }
+  .site-footer__wordmark {
+    font-family: var(--ff-serif);
+    font-size: var(--fs-h3);
+    margin-bottom: var(--space-2);
+    color: var(--fg);
+  }
+  .site-footer__issue {
+    color: var(--rule-strong);
+    letter-spacing: var(--tracking-caps);
+    margin: 0;
+    font-size: var(--fs-caps);
+  }
+</style>

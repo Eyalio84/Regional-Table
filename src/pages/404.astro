@@ -1,0 +1,81 @@
+---
+/**
+ * 404.astro — Custom not-found page in the Regional Table voice.
+ * Astro convention: this file is served whenever a requested path has no match.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RuleLine from '../components/atlas/RuleLine.astro';
+---
+
+<BaseLayout
+  title="Off the map — The Regional Table"
+  description="The page you asked for is not in this atlas."
+  region="neutral"
+>
+  <article class="notfound container readable">
+    <p class="caps notfound__marker">404 · OFF THE MAP</p>
+    <h1 class="notfound__title">You have wandered past the edge of the atlas.</h1>
+    <p class="notfound__lede">
+      This page is not in the index. Either the coordinates were entered wrong, the plate has been moved, or it was never pressed in the first place. None of these are your fault — but the kitchen still cannot find it.
+    </p>
+
+    <RuleLine weight="strong" label="TRY ONE OF THESE" />
+
+    <nav class="notfound__nav" aria-label="Suggested destinations">
+      <ul>
+        <li><a href="/">Homepage</a> — the cover</li>
+        <li><a href="/regions/">The five kitchens</a> — pick a region</li>
+        <li><a href="/recipes/">The recipe index</a> — every plate in the publication</li>
+        <li><a href="/ask">The Master Chef</a> — ask anyone anything</li>
+        <li><a href="/about">About</a> — what this publication actually is</li>
+      </ul>
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  .notfound {
+    padding-block: var(--space-9) var(--space-8);
+    text-align: left;
+  }
+  .notfound__marker {
+    color: var(--accent);
+    letter-spacing: var(--tracking-caps);
+    margin-bottom: var(--space-5);
+    font-size: var(--fs-caps);
+  }
+  .notfound__title {
+    font-family: var(--ff-serif);
+    font-size: var(--fs-h1);
+    line-height: var(--lh-h1);
+    color: var(--fg);
+    margin-block: 0 var(--space-5);
+  }
+  .notfound__lede {
+    font-family: var(--ff-serif);
+    font-size: var(--fs-lede);
+    line-height: var(--lh-lede);
+    color: var(--fg);
+    margin-block: 0 var(--space-7);
+  }
+  .notfound__nav ul {
+    list-style: none;
+    margin: var(--space-5) 0 0;
+    padding: 0;
+  }
+  .notfound__nav li {
+    padding-block: var(--space-2);
+    font-family: var(--ff-serif);
+    font-size: var(--fs-body);
+    color: var(--rule-strong);
+    border-bottom: 1px dotted var(--rule-faint);
+  }
+  .notfound__nav a {
+    color: var(--fg);
+    text-decoration: none;
+    transition: color var(--motion-fast) var(--ease-deliberate);
+  }
+  .notfound__nav a:hover {
+    color: var(--accent);
+  }
+</style>

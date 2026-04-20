@@ -1,0 +1,330 @@
+---
+/**
+ * colophon.astro — Credits, sources, and attributions.
+ *
+ * Sections:
+ *   1. Photography — Unsplash photographers from all 5 recipe heroPhotographer fields
+ *   2. Sources — content source types: knowledge graph, TheMealDB, Wikipedia/Wikibooks, Gutenberg
+ *   3. Typography — DM Serif Display + DM Sans (Google Fonts)
+ *   4. Design system — Atlas design system, link to /styleguide
+ *
+ * Photographer credits pulled from recipe frontmatter at build time.
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RuleLine from '../components/atlas/RuleLine.astro';
+import CoordinateStrip from '../components/atlas/CoordinateStrip.astro';
+
+// Collect photographer credits from all recipes
+const recipes = await getCollection('recipes');
+const photographers = recipes
+  .map((r) => ({
+    title: r.data.title,
+    name: r.data.heroPhotographer as string,
+    url: r.data.heroPhotographerUrl as string,
+    region: r.data.region as string,
+  }))
+  .sort((a, b) => a.title.localeCompare(b.title));
+
+const REGION_LABELS: Record<string, string> = {
+  'neapolitan':      'Neapolitan',
+  'lyonnais':        'Lyonnais',
+  'cajun-creole':    'Cajun-Creole',
+  'nyc-street-food': 'NYC Street Food',
+  'washoku':         'Washoku',
+};
+---
+
+<BaseLayout
+  title="Colophon — The Regional Table"
+  description="Photography credits, content sources, and attributions for The Regional Table."
+  region="neutral"
+>
+  <div class="colophon-page container readable">
+
+    <CoordinateStrip lat={0} lon={0} regionName="COLOPHON" />
+
+    <h1 class="colophon-h1">Colophon</h1>
+    <p class="colophon-lede">
+      Sources, credits, and attributions for everyone whose work makes this publication possible.
+    </p>
+
+    <RuleLine weight="hair" />
+
+    <!-- Section 1 — Photography -->
+    <section class="colophon-section">
+      <h2 class="colophon-h2">Photography</h2>
+
+      <p class="colophon-body">
+        All recipe photographs are sourced from Unsplash under the
+        <a href="https://unsplash.com/license" class="colophon-link" rel="noopener">Unsplash License</a>.
+        Photographs courtesy of Unsplash and the photographers credited below.
+      </p>
+
+      <ul class="colophon-photo-list">
+        {photographers.map((p) => (
+          <li class="colophon-photo-item">
+            <span class="colophon-photo-title">{p.title}</span>
+            <span class="colophon-photo-sep" aria-hidden="true"> &mdash; </span>
+            <span class="colophon-photo-region caps">{REGION_LABELS[p.region] ?? p.region}</span>
+            <span class="colophon-photo-credit">
+              {' '}Photograph by{' '}
+              <a href={p.url} class="colophon-link" rel="noopener">{p.name}</a>
+              {' '}on Unsplash
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      <p class="colophon-body colophon-note">
+        The cover photograph on the homepage is the Rag&ugrave; Napoletano hero image,
+        used with the same credit above.
+      </p>
+    </section>
+
+    <RuleLine weight="hair" />
+
+    <!-- Section 2 — Sources -->
+    <section class="colophon-section">
+      <h2 class="colophon-h2">Sources</h2>
+
+      <p class="colophon-body">
+        The knowledge behind each regional expert voice is drawn from the following source types:
+      </p>
+
+      <dl class="colophon-source-list">
+        <div class="colophon-source-item">
+          <dt class="colophon-source-name">Cuisine-Expert knowledge graph</dt>
+          <dd class="colophon-source-desc">
+            Internal research compiled by the Verbalogix editorial team. Each region holds
+            a structured graph of techniques, integrity lines, rivalries, sacred ingredients,
+            and seasonal awareness. This is the primary authoritative source for each expert voice.
+          </dd>
+        </div>
+
+        <div class="colophon-source-item">
+          <dt class="colophon-source-name">
+            <a href="https://www.themealdb.com" class="colophon-link" rel="noopener">TheMealDB</a>
+          </dt>
+          <dd class="colophon-source-desc">
+            Open API for structured dish reference data. Used for cross-referencing dish names,
+            regional classifications, and ingredient groupings where the knowledge graph required validation.
+          </dd>
+        </div>
+
+        <div class="colophon-source-item">
+          <dt class="colophon-source-name">Wikipedia &amp; Wikibooks Cookbook</dt>
+          <dd class="colophon-source-desc">
+            Used for historical and cultural context. Content from Wikipedia and Wikibooks is
+            licensed under
+            <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="colophon-link" rel="noopener">CC BY-SA 4.0</a>.
+            Where content from these sources was incorporated in edited form, the attribution
+            requirement of the license is acknowledged here.
+          </dd>
+        </div>
+
+        <div class="colophon-source-item">
+          <dt class="colophon-source-name">Project Gutenberg cookbooks</dt>
+          <dd class="colophon-source-desc">
+            Historical cookbooks and culinary texts in the public domain, accessed via
+            <a href="https://www.gutenberg.org" class="colophon-link" rel="noopener">Project Gutenberg</a>.
+            Public domain materials require no license attribution, but are noted here for completeness.
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <RuleLine weight="hair" />
+
+    <!-- Section 3 — Typography -->
+    <section class="colophon-section">
+      <h2 class="colophon-h2">Typography</h2>
+
+      <p class="colophon-body">
+        <strong class="colophon-strong">Display:</strong> DM Serif Display &mdash;
+        a high-contrast transitional serif used for headlines, cover wordmarks, and pull quotes.
+        Weights 400 and 400 italic.
+      </p>
+      <p class="colophon-body">
+        <strong class="colophon-strong">Body:</strong> DM Sans &mdash;
+        a geometric sans-serif used for caps labels, metadata, navigation, and UI elements.
+        Weights 400, 500, 700, 800.
+      </p>
+      <p class="colophon-body colophon-note">
+        Both typefaces are served via
+        <a href="https://fonts.google.com" class="colophon-link" rel="noopener">Google Fonts</a>.
+      </p>
+    </section>
+
+    <RuleLine weight="hair" />
+
+    <!-- Section 4 — Design system -->
+    <section class="colophon-section">
+      <h2 class="colophon-h2">Design system</h2>
+
+      <p class="colophon-body">
+        The Atlas design system &mdash; hairline rules, coordinate strips, duotone filters,
+        map primitives, and the cartographic visual language &mdash; was authored in M0.5 of
+        the project. The living reference is the
+        <a href="/styleguide" class="colophon-link">styleguide</a> (development and staging only;
+        marked <code class="colophon-code">noindex</code>). The system is documented in
+        <code class="colophon-code">src/components/atlas/</code>.
+      </p>
+    </section>
+
+    <RuleLine weight="strong" />
+
+    <p class="colophon-footer caps">
+      The Regional Table &middot; No. I &middot; MMXXVI &middot;
+      <a href="/about" class="colophon-link">About</a>
+    </p>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .colophon-page {
+    padding-block: var(--space-7) var(--space-10);
+  }
+  .readable {
+    max-width: 680px;
+  }
+
+  .colophon-h1 {
+    font-family: var(--ff-serif);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 400;
+    color: var(--fg);
+    margin: var(--space-5) 0 var(--space-3);
+    line-height: 1.15;
+  }
+  .colophon-lede {
+    font-family: var(--ff-serif);
+    font-size: var(--fs-lede);
+    color: var(--rule-strong);
+    font-style: italic;
+    line-height: var(--lh-lede);
+    margin: 0 0 var(--space-5);
+  }
+
+  .colophon-section {
+    padding-block: var(--space-7) var(--space-5);
+  }
+
+  .colophon-h2 {
+    font-family: var(--ff-sans);
+    font-size: var(--fs-caps);
+    font-weight: 500;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--rule-strong);
+    margin: 0 0 var(--space-5);
+  }
+
+  .colophon-body {
+    font-family: var(--ff-serif);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--fg);
+    margin: 0 0 var(--space-4);
+  }
+  .colophon-note {
+    color: var(--rule-strong);
+    font-style: italic;
+  }
+  .colophon-strong {
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  .colophon-link {
+    color: var(--fg);
+    border-bottom: 1px solid var(--rule-faint);
+    text-decoration: none;
+    padding-bottom: 1px;
+    transition: color 150ms ease, border-color 150ms ease;
+  }
+  .colophon-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* Photo credit list */
+  .colophon-photo-list {
+    list-style: none;
+    margin: var(--space-4) 0 var(--space-5);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid var(--rule-faint);
+  }
+  .colophon-photo-item {
+    font-family: var(--ff-serif);
+    font-size: var(--fs-body);
+    color: var(--fg);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--rule-faint);
+    line-height: 1.5;
+  }
+  .colophon-photo-title {
+    font-style: italic;
+  }
+  .colophon-photo-region {
+    font-family: var(--ff-sans);
+    font-size: var(--fs-caps);
+    letter-spacing: var(--tracking-caps);
+    color: var(--accent);
+  }
+  .colophon-photo-credit {
+    color: var(--rule-strong);
+  }
+  .colophon-photo-sep {
+    color: var(--rule);
+  }
+
+  /* Source list */
+  .colophon-source-list {
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+  .colophon-source-item {
+    border-left: 2px solid var(--rule-faint);
+    padding-left: var(--space-4);
+  }
+  .colophon-source-name {
+    font-family: var(--ff-sans);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    color: var(--fg);
+    margin: 0 0 var(--space-2);
+  }
+  .colophon-source-desc {
+    font-family: var(--ff-serif);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--rule-strong);
+    margin: 0;
+  }
+
+  .colophon-code {
+    font-family: monospace;
+    font-size: 0.875em;
+    background: var(--rule-faint);
+    padding: 2px 5px;
+    border-radius: 2px;
+    color: var(--fg);
+  }
+
+  .colophon-footer {
+    font-size: var(--fs-caps);
+    letter-spacing: var(--tracking-caps);
+    color: var(--rule-strong);
+    text-align: center;
+    padding-block: var(--space-5);
+    margin: 0;
+  }
+</style>

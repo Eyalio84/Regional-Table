@@ -1,0 +1,54 @@
+---
+/**
+ * FloatingChefPill.astro — site-wide floating pill that opens MasterChefModal.
+ * Self-hides on /ask route. Fixed bottom-right.
+ */
+
+const pathname = Astro.url.pathname;
+const hideOnAsk = pathname === '/ask' || pathname === '/ask/';
+
+if (hideOnAsk) {
+  // Render nothing on the /ask page
+}
+---
+
+{!hideOnAsk && (
+  <button
+    class="chef-pill"
+    aria-label="Open Master Chef chat"
+    onclick="window.dispatchEvent(new CustomEvent('open-master-chef'))"
+  >
+    » ASK A CHEF
+  </button>
+)}
+
+<style>
+  .chef-pill {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: var(--z-pill);
+    padding: var(--space-3) var(--space-5);
+    background: var(--gold);
+    color: var(--ink);
+    font-family: var(--ff-sans);
+    font-size: var(--fs-caps);
+    font-weight: 500;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    border: none;
+    border-radius: 9999px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition:
+      background var(--motion-fast) var(--ease-deliberate),
+      transform var(--motion-fast) var(--ease-deliberate);
+  }
+  .chef-pill:hover {
+    background: var(--gold-warm);
+    transform: translateY(-2px);
+  }
+  .chef-pill:active {
+    transform: translateY(0);
+  }
+</style>

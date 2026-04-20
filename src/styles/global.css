@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+/* ============================================================
+ * Tailwind 4 @theme — publication-level tokens registered as
+ * Tailwind utilities. Per-region tokens stay in tokens.css and
+ * are accessed via CSS custom properties (var(--accent), etc.)
+ * or Tailwind's arbitrary-value syntax (text-[var(--fg)]).
+ * ============================================================
+ */
+
+@theme {
+  /* Fonts — enable font-serif / font-sans utility classes */
+  --font-serif: "DM Serif Display", "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+
+  /* Publication neutrals — Atlas base palette */
+  --color-ink: #1a1611;
+  --color-cream: #f3ecd9;
+  --color-rule: #a39882;
+  --color-rule-strong: #5a4e3a;
+  --color-rule-faint: #d6cdb8;
+  --color-gold: #b8860b;
+  --color-gold-warm: #d4a017;
+}

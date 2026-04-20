@@ -1,0 +1,355 @@
+/* ============================================================
+ * Atlas design tokens — The Regional Table
+ * ============================================================
+ *
+ * Every Atlas primitive reads from these variables. Do not
+ * hardcode colors or timings in components; reference tokens.
+ *
+ * Per-region theme swap happens via [data-region="..."] on
+ * <body>. Default is "neutral" (see BaseLayout.astro).
+ *
+ * Regions: neapolitan | lyonnais | cajun-creole | nyc-street-food | washoku
+ * Palette values derived from Cuisine-Expert frontend region config,
+ * upgraded for editorial publication context (Lyon reworked to
+ * bordeaux+bone per Atlas plan).
+ */
+
+/* ------------------------------------------------------------
+ * :root — publication-level neutrals, type scale, motion, grid
+ * ------------------------------------------------------------
+ */
+:root {
+  /* Base neutrals (publication-level, region-agnostic) */
+  --ink:          #1a1611;          /* warm black, body text default */
+  --cream:        #f3ecd9;          /* warm off-white, page bg default */
+  --rule:         #a39882;          /* hairline color, ink-on-aged-paper */
+  --rule-strong:  #5a4e3a;          /* darker hairline for emphasized rules */
+  --rule-faint:   #d6cdb8;          /* very faint hairline for grid lines */
+
+  /* Atlas publication accent (used only on the Master Chef floating pill) */
+  --gold:         #b8860b;          /* aged gold, not luxe gold */
+  --gold-warm:    #d4a017;          /* hover state */
+
+  /* Neutral region defaults — used when data-region="neutral" */
+  --bg:            var(--cream);
+  --fg:            var(--ink);
+  --accent:        var(--gold);
+  --secondary:     var(--rule-strong);
+  --duotone-dark:  var(--ink);
+  --duotone-light: var(--rule);
+
+  /* Type scale (fluid clamp ranges — min at 360px, max at 1440px) */
+  --fs-display:   clamp(3rem, 8vw, 6rem);         /* 48 → 96px recipe hero */
+  --fs-h1:        clamp(2.25rem, 5vw, 3.5rem);    /* 36 → 56px region titles */
+  --fs-h2:        clamp(1.625rem, 3.2vw, 2.25rem);/* 26 → 36px section heads */
+  --fs-h3:        clamp(1.25rem, 2vw, 1.5rem);    /* 20 → 24px sub-heads */
+  --fs-lede:      1.375rem;                       /* 22px drop-cap body intro */
+  --fs-body:      1rem;                           /* 16px body sans */
+  --fs-sm:        0.875rem;                       /* 14px secondary/captions */
+  --fs-caps:      0.75rem;                        /* 12px caps-sans metadata */
+  --fs-coord:     0.8125rem;                      /* 13px coordinate strip */
+
+  /* Line heights */
+  --lh-display:   1.02;                           /* tight display */
+  --lh-h1:        1.08;
+  --lh-h2:        1.15;
+  --lh-lede:      1.45;                           /* serif intro reading */
+  --lh-body:      1.625;                          /* body sans reading */
+  --lh-meta:      1.3;                            /* compact metadata */
+
+  /* Letter spacing */
+  --tracking-caps:    0.15em;                     /* coordinate / caps labels */
+  --tracking-coord:   0.1em;                      /* coord strip numerics */
+  --tracking-display: -0.02em;                    /* tighten display serif */
+
+  /* Font stacks — DM Serif Display loaded as 400 only */
+  --ff-serif: "DM Serif Display", "Playfair Display", Georgia, "Times New Roman", serif;
+  --ff-sans:  "DM Sans", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+
+  /* Spacing scale (modular, ~1.5x step) */
+  --space-1:   0.25rem;   /* 4px */
+  --space-2:   0.5rem;    /* 8px */
+  --space-3:   0.75rem;   /* 12px */
+  --space-4:   1rem;      /* 16px */
+  --space-5:   1.5rem;    /* 24px */
+  --space-6:   2rem;      /* 32px */
+  --space-7:   3rem;      /* 48px */
+  --space-8:   4rem;      /* 64px */
+  --space-9:   6rem;      /* 96px */
+  --space-10:  8rem;      /* 128px */
+
+  /* Layout widths */
+  --content-width:   1200px;                      /* page container */
+  --readable-width:  680px;                       /* body text max-width */
+  --gutter:          clamp(1rem, 4vw, 2.5rem);    /* page edge padding */
+
+  /* Rule widths */
+  --rule-width:         1px;                      /* hairline */
+  --rule-width-strong:  2px;                      /* emphasized rule */
+
+  /* Motion — deliberate "cartographic" timings, not bouncy */
+  --motion-fast:    240ms;
+  --motion-base:    400ms;                        /* coord tick, section fade */
+  --motion-slow:    800ms;                        /* path draw, pin staggered */
+  --ease-deliberate: cubic-bezier(0.4, 0, 0.2, 1);/* ink settling on paper */
+  --ease-emerge:     cubic-bezier(0.16, 1, 0.3, 1);/* out-expo, for reveals */
+
+  /* Duotone tuning (defaults; regions override) */
+  --duotone-saturation: 1.2;
+
+  /* Z-index layers */
+  --z-content:   1;
+  --z-map:       5;
+  --z-chat:      10;
+  --z-pill:      50;
+  --z-modal:     100;
+}
+
+/* ------------------------------------------------------------
+ * Regional palettes — data-region swaps on <body>
+ * Each region owns: --bg --fg --accent --secondary --duotone-dark --duotone-light
+ * ------------------------------------------------------------
+ */
+
+[data-region="neapolitan"] {
+  --bg:            #fef9f0;  /* warm cream */
+  --fg:            #2c1810;  /* dark espresso */
+  --accent:        #c0392b;  /* Pompeii red */
+  --secondary:     #e67e22;  /* ochre */
+  --duotone-dark:  #2c1810;
+  --duotone-light: #f39c12;  /* Neapolitan gold */
+}
+
+[data-region="lyonnais"] {
+  --bg:            #f4eee4;  /* bone */
+  --fg:            #1f0f15;  /* dark plum-black */
+  --accent:        #6b0f1a;  /* bordeaux */
+  --secondary:     #d4af37;  /* Bocuse old gold */
+  --duotone-dark:  #1f0f15;
+  --duotone-light: #8c5a4a;  /* dried rose */
+}
+
+[data-region="cajun-creole"] {
+  --bg:            #fff8f0;  /* warm ivory */
+  --fg:            #1a0a00;  /* deep brown */
+  --accent:        #8c2232;  /* brick */
+  --secondary:     #d4963a;  /* ochre (jazz-brass dimmed) */
+  --duotone-dark:  #1a0a00;
+  --duotone-light: #c47a3d;
+}
+
+[data-region="nyc-street-food"] {
+  --bg:            #f0efeb;  /* concrete */
+  --fg:            #1a1a1a;  /* asphalt */
+  --accent:        #f5a623;  /* taxi yellow */
+  --secondary:     #e94560;  /* Sabrett umbrella red */
+  --duotone-dark:  #1a1a1a;
+  --duotone-light: #f5a623;
+}
+
+[data-region="washoku"] {
+  --bg:            #faf8f5;  /* washi paper */
+  --fg:            #1c1c1c;  /* charcoal */
+  --accent:        #2d2d2d;  /* sumi ink (deliberately near-black accent) */
+  --secondary:     #c41e3a;  /* torii red */
+  --duotone-dark:  #2d2d2d;
+  --duotone-light: #8b7355;  /* bamboo brown */
+}
+
+/* ------------------------------------------------------------
+ * Base element styles — reset + defaults anchored to tokens
+ * ------------------------------------------------------------
+ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--ff-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition:
+    background-color var(--motion-base) var(--ease-deliberate),
+    color var(--motion-base) var(--ease-deliberate);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--fg);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--ff-serif);
+  font-weight: 400;
+  margin: 0;
+  letter-spacing: var(--tracking-display);
+  color: var(--fg);
+}
+
+h1 { font-size: var(--fs-h1); line-height: var(--lh-h1); }
+h2 { font-size: var(--fs-h2); line-height: var(--lh-h2); }
+h3 { font-size: var(--fs-h3); line-height: var(--lh-h2); }
+
+p {
+  margin: 0 0 var(--space-4) 0;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color var(--motion-fast) var(--ease-deliberate);
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ------------------------------------------------------------
+ * Utility classes — shared across Atlas primitives
+ * ------------------------------------------------------------
+ */
+
+.caps {
+  font-family: var(--ff-sans);
+  font-size: var(--fs-caps);
+  font-weight: 500;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  line-height: var(--lh-meta);
+}
+
+.coord-label {
+  font-family: var(--ff-sans);
+  font-size: var(--fs-coord);
+  font-weight: 500;
+  letter-spacing: var(--tracking-coord);
+  font-variant-numeric: tabular-nums;
+}
+
+.display {
+  font-family: var(--ff-serif);
+  font-size: var(--fs-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.lede {
+  font-family: var(--ff-serif);
+  font-size: var(--fs-lede);
+  line-height: var(--lh-lede);
+}
+
+.lede-dropcap::first-letter {
+  font-family: var(--ff-serif);
+  float: left;
+  font-size: calc(var(--fs-display) * 0.65);
+  line-height: 0.9;
+  padding-top: 0.08em;
+  padding-right: 0.12em;
+  padding-bottom: 0;
+  color: var(--accent);
+}
+
+/* Hairline rule utility */
+.hairline {
+  display: block;
+  width: 100%;
+  height: var(--rule-width);
+  background-color: var(--rule);
+  border: 0;
+}
+
+.hairline-strong {
+  height: var(--rule-width-strong);
+  background-color: var(--rule-strong);
+}
+
+.hairline-dotted {
+  height: 0;
+  border-top: var(--rule-width) dotted var(--rule);
+  background: transparent;
+}
+
+/* Container wrappers */
+.container {
+  width: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding-inline: var(--gutter);
+}
+
+.readable {
+  max-width: var(--readable-width);
+  margin-inline: auto;
+}
+
+/* Page section with vertical rhythm */
+.section {
+  padding-block: var(--space-8);
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding-block: var(--space-9);
+  }
+}
+
+/* ------------------------------------------------------------
+ * Reduced-motion — honor user preference
+ * ------------------------------------------------------------
+ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------
+ * Reveal — IntersectionObserver fade-in utility
+ * Applied by pages/components; toggles .is-visible on observe
+ * ------------------------------------------------------------
+ */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity var(--motion-base) var(--ease-emerge),
+    transform var(--motion-base) var(--ease-emerge);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ------------------------------------------------------------
+ * Duotone — applied via RegionalDuotone component wrapping <img>
+ * Strategy: grayscale + sepia + hue-rotate + saturate approximation
+ * (SVG feColorMatrix fallback lives in that component for precision).
+ * ------------------------------------------------------------
+ */
+.duotone {
+  filter:
+    grayscale(1)
+    sepia(0.3)
+    contrast(1.05)
+    saturate(var(--duotone-saturation));
+  mix-blend-mode: multiply;
+}

@@ -1,0 +1,454 @@
+---
+/**
+ * styleguide.astro — Atlas Design System M0.5 living reference.
+ * Not linked from any production page. noindex meta prevents search indexing.
+ */
+import CoordinateStrip from '../components/atlas/CoordinateStrip.astro';
+import RuleLine from '../components/atlas/RuleLine.astro';
+import LegendCallout from '../components/atlas/LegendCallout.astro';
+import SpecimenList from '../components/atlas/SpecimenList.astro';
+import MethodList from '../components/atlas/MethodList.astro';
+import DottedPath from '../components/atlas/DottedPath.astro';
+import RegionalDuotone from '../components/atlas/RegionalDuotone.astro';
+import DuotoneFilters from '../components/atlas/DuotoneFilters.astro';
+import MapSVG from '../components/atlas/MapSVG.astro';
+import PhotoCredit from '../components/atlas/PhotoCredit.astro';
+import Reveal from '../components/atlas/Reveal.astro';
+import '../styles/tokens.css';
+import '../styles/global.css';
+
+const specimenItems = [
+  { quantity: '2 kg', name: 'beef shoulder', note: 'cut into 3-inch pieces' },
+  { quantity: '400 ml', name: 'dry white wine' },
+  { quantity: '1 bunch', name: 'flat-leaf parsley', note: 'stems and leaves separated' },
+];
+
+const methodItems = [
+  { step: 'Brown the meat in batches over high heat. Do not crowd the pan — each piece needs unobstructed contact with the iron.', tip: 'The fond is the foundation. Scrape every bit.' },
+  { step: 'Deglaze with wine. Let the alcohol cook off completely before adding any liquid. You will know when it stops smelling sharp.' },
+  { step: 'Cover and braise at 140°C for three hours. Check once at ninety minutes. The meat is done when it yields to a spoon without resistance.' },
+];
+
+const regions = [
+  { id: 'neapolitan',     label: 'Neapolitan' },
+  { id: 'lyonnais',       label: 'Lyonnais' },
+  { id: 'cajun-creole',   label: 'Cajun-Creole' },
+  { id: 'nyc-street-food', label: 'NYC Street Food' },
+  { id: 'washoku',        label: 'Washoku' },
+] as const;
+
+const paletteVars = ['--bg', '--fg', '--accent', '--secondary', '--duotone-dark', '--duotone-light'];
+const paletteLabels = ['bg', 'fg', 'accent', 'secondary', 'duotone-dark', 'duotone-light'];
+
+const foodPhotoUrl = 'https://images.unsplash.com/photo-1572441713132-c542fc4fe282?w=800';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Atlas Design System — M0.5 Styleguide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,800;1,9..40,400&display=swap"
+    />
+  </head>
+  <body data-region="neutral">
+    <DuotoneFilters />
+    <div class="sg-container">
+
+      <!-- Page title -->
+      <header class="sg-header">
+        <h1 class="sg-page-title">Atlas Design System — M0.5 Styleguide</h1>
+        <p class="sg-page-sub caps">Direct-URL access only · noindex · dev reference</p>
+        <RuleLine weight="strong" />
+      </header>
+
+      <!-- ── 1. TYPE SCALE ───────────────────────────────────────── -->
+      <section class="sg-section">
+        <p class="sg-caption caps">1 · Type Scale</p>
+        <div class="sg-type-scale">
+          <div class="display sg-type-demo">The Regional Table</div>
+          <RuleLine weight="hair" />
+          <h1 class="sg-type-demo">Five Kitchens, One Table</h1>
+          <RuleLine weight="hair" />
+          <h2 class="sg-type-demo">Neapolitan Traditions</h2>
+          <RuleLine weight="hair" />
+          <h3 class="sg-type-demo">Method and Technique</h3>
+          <RuleLine weight="hair" />
+          <p class="lede lede-dropcap sg-type-demo">
+            Every great dish has a point of no return — the moment when the cook commits and the recipe takes over. In a Neapolitan ragù it arrives when the meat first hits the fat. From that instant, time does the work.
+          </p>
+          <RuleLine weight="hair" />
+          <p class="sg-type-demo">Body text in DM Sans at 16px, line-height 1.625. Suitable for secondary descriptions, labels, and paragraph copy outside editorial voice.</p>
+          <RuleLine weight="hair" />
+          <p class="caps sg-type-demo">CAPS LABEL · METADATA · COORDINATES · 0.75REM · 500 WEIGHT</p>
+          <RuleLine weight="hair" />
+          <p class="coord-label sg-type-demo">40.84°N · 14.25°E · NAPLES · Plate III</p>
+        </div>
+      </section>
+
+      <RuleLine weight="strong" label="SECTION 2" />
+
+      <!-- ── 2. RULE LINES ──────────────────────────────────────── -->
+      <section class="sg-section">
+        <p class="sg-caption caps">2 · Rule Lines</p>
+        <p class="sg-label">Hair (default)</p>
+        <RuleLine weight="hair" />
+        <p class="sg-label">Strong</p>
+        <RuleLine weight="strong" />
+        <p class="sg-label">Dotted</p>
+        <RuleLine weight="dotted" />
+        <p class="sg-label">Labeled</p>
+        <RuleLine weight="hair" label="SECTION BREAK" />
+        <RuleLine weight="strong" label="CHAPTER" />
+        <RuleLine weight="dotted" label="CONTINUES" />
+      </section>
+
+      <RuleLine weight="strong" label="SECTION 3" />
+
+      <!-- ── 3. COORDINATE STRIP ────────────────────────────────── -->
+      <section class="sg-section">
+        <p class="sg-caption caps">3 · Coordinate Strip</p>
+        <p class="sg-label">Neutral (default palette)</p>
+        <CoordinateStrip lat={40.84} lon={14.25} regionName="Naples" plateNumber={3} />
+        <p class="sg-label" style="margin-top: var(--space-5);">Neapolitan palette via data-region wrapper</p>
+        <div data-region="neapolitan" class="sg-region-box">
+          <CoordinateStrip lat={40.84} lon={14.25} regionName="Naples" plateNumber={3} />
+        </div>
+        <p class="sg-label" style="margin-top: var(--space-4);">Washoku</p>
+        <div data-region="washoku" class="sg-region-box">
+          <CoordinateStrip lat={35.68} lon={139.69} regionName="Tokyo" plateNumber={1} />
+        </div>
+      </section>
+
+      <RuleLine weight="strong" label="SECTION 4" />
+
+      <!-- ── 4. LEGEND CALLOUT ──────────────────────────────────── -->
+      <section class="sg-section">
+        <p class="sg-caption caps">4 · Legend Callout</p>
+        <LegendCallout severity="absolute" rule="No cream. No carrot. The meat cooks whole." />
+        <LegendCallout severity="strong" rule="Always deglaze with the same wine you serve at the table." />
+        <LegendCallout severity="mild" rule="A handful of basil at the end brightens the sauce without altering the structure." />
+        <p class="sg-label" style="margin-top: var(--space-5);">Lyonnais palette</p>
+        <div data-region="lyonnais" class="sg-region-box">
+          <LegendCallout severity="absolute" rule="The quenelle is poached, not fried. This is not negotiable." />
+          <LegendCallout severity="strong" rule="Butter goes in cold and in stages. Never all at once." />
+        </div>
+      </section>
+
+      <RuleLine weight="strong" label="SECTION 5" />
+
+      <!-- ── 5. SPECIMEN LIST ───────────────────────────────────── -->
+      <section class="sg-section">
+        <p class="sg-caption caps">5 · Specimen List</p>
+        <SpecimenList items={specimenItems} />
+      </section>
+
+      <RuleLine weight="strong" label="SECTION 6" />
+
+      <!-- ── 6. METHOD LIST ─────────────────────────────────────── -->
+      <section class="sg-section">
+        <p class="sg-caption caps">6 · Method List</p>
+        <MethodList items={methodItems} />
+      </section>
+
+      <RuleLine weight="strong" label="SECTION 7" />
+
+      <!-- ── 7. DOTTED PATH ─────────────────────────────────────── -->
+      <section class="sg-section">
+        <p class="sg-caption caps">7 · Dotted Path</p>
+        <div class="sg-path-demo" style="position: relative; height: 160px; border: 1px solid var(--rule-faint); border-radius: 4px; overflow: hidden;">
+          <span id="path-from" class="sg-path-anchor caps" style="position: absolute; left: 60px; top: 40px;">Naples</span>
+          <span id="path-to" class="sg-path-anchor caps" style="position: absolute; right: 80px; bottom: 40px;">Map pin</span>
+          <DottedPath fromId="path-from" toId="path-to" curve="arc" />
+        </div>
+        <p class="sg-label" style="margin-top: var(--space-3);">Straight line variant</p>
+        <div class="sg-path-demo" style="position: relative; height: 120px; border: 1px solid var(--rule-faint); border-radius: 4px; overflow: hidden; margin-top: var(--space-2);">
+          <span id="path-from-b" class="sg-path-anchor caps" style="position: absolute; left: 40px; top: 50px;">Lyon</span>
+          <span id="path-to-b" class="sg-path-anchor caps" style="position: absolute; right: 60px; top: 50px;">NOLA</span>
+          <DottedPath fromId="path-from-b" toId="path-to-b" curve="straight" />
+        </div>
+      </section>
+
+      <RuleLine weight="strong" label="SECTION 8" />
+
+      <!-- ── 8. REGIONAL DUOTONE ────────────────────────────────── -->
+      <section class="sg-section">
+        <p class="sg-caption caps">8 · Regional Duotone</p>
+        <div class="sg-duotone-grid">
+          {regions.map((r) => (
+            <div class="sg-duotone-cell">
+              <p class="caps sg-duotone-label">{r.label}</p>
+              <RegionalDuotone
+                src={foodPhotoUrl}
+                alt={`${r.label} duotone example`}
+                region={r.id}
+                width={400}
+                height={266}
+              />
+            </div>
+          ))}
+          <div class="sg-duotone-cell">
+            <p class="caps sg-duotone-label">Neutral</p>
+            <RegionalDuotone
+              src={foodPhotoUrl}
+              alt="Neutral duotone example"
+              region="neutral"
+              width={400}
+              height={266}
+            />
+          </div>
+        </div>
+      </section>
+
+      <RuleLine weight="strong" label="SECTION 9" />
+
+      <!-- ── 9. PER-REGION PALETTE CHIPS ───────────────────────── -->
+      <section class="sg-section">
+        <p class="sg-caption caps">9 · Per-Region Palette Chips</p>
+        {regions.map((r) => (
+          <div data-region={r.id} class="sg-palette-region">
+            <p class="caps sg-palette-region-label">{r.label}</p>
+            <div class="sg-palette-row">
+              {paletteVars.map((v, i) => (
+                <div class="sg-swatch-wrap">
+                  <div
+                    class="sg-swatch"
+                    style={`background: var(${v}); border: 1px solid var(--rule-faint);`}
+                  ></div>
+                  <span class="caps sg-swatch-label">{paletteLabels[i]}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </section>
+
+      <RuleLine weight="strong" label="SECTION 10" />
+
+      <!-- ── 10. MAP SVG ─────────────────────────────────────────── -->
+      <section class="sg-section">
+        <p class="sg-caption caps">10 · Atlas Map</p>
+        <p class="sg-label">Click a pin to navigate to /regions/[slug]. activePin="neapolitan" demo:</p>
+        <MapSVG activePin="neapolitan" />
+      </section>
+
+      <RuleLine weight="strong" label="SECTION 11" />
+
+      <!-- ── 11. FLOATING PILL + MODAL ──────────────────────────── -->
+      <section class="sg-section">
+        <p class="sg-caption caps">11 · Floating Chef Pill + Master Chef Modal</p>
+        <div class="sg-note">
+          <p>The gold "» ASK A CHEF" pill is mounted in <code>BaseLayout.astro</code> and appears on every page except <code>/ask</code>. To test on this page, look for the fixed pill at bottom-right of your viewport (unless you are on the <code>/ask</code> route).</p>
+          <p>Clicking the pill dispatches a <code>open-master-chef</code> custom event. The <code>MasterChefModal</code> React component (hydrated with <code>client:load</code>) listens for it and toggles open. Press <kbd>Esc</kbd> or click the backdrop to close.</p>
+          <p>Full chat capability is wired in M1. The modal body is a shell placeholder in M0.5.</p>
+        </div>
+      </section>
+
+      <RuleLine weight="strong" label="SECTION 12" />
+
+      <!-- ── 12. PHOTO CREDIT ────────────────────────────────────── -->
+      <section class="sg-section">
+        <p class="sg-caption caps">12 · Photo Credit</p>
+        <PhotoCredit
+          photographer="Eaters Collective"
+          photographerUrl="https://unsplash.com/@eaters_collective"
+          source="Unsplash"
+          align="left"
+        />
+        <PhotoCredit
+          photographer="Eaters Collective"
+          photographerUrl="https://unsplash.com/@eaters_collective"
+          source="Unsplash"
+          align="center"
+        />
+        <PhotoCredit
+          photographer="Eaters Collective"
+          photographerUrl="https://unsplash.com/@eaters_collective"
+          source="Unsplash"
+          align="right"
+        />
+      </section>
+
+      <RuleLine weight="strong" label="SECTION 13" />
+
+      <!-- ── 13. REVEAL ─────────────────────────────────────────── -->
+      <section class="sg-section">
+        <p class="sg-caption caps">13 · Reveal — scroll down to trigger</p>
+        <p class="sg-label">Three 200px blocks that fade in as they enter the viewport (10% threshold).</p>
+        <div style="display: flex; flex-direction: column; gap: var(--space-6); margin-top: var(--space-6);">
+          <Reveal>
+            <div class="sg-reveal-block" data-region="neapolitan">
+              <span class="caps">Neapolitan — Reveal Block I</span>
+            </div>
+          </Reveal>
+          <Reveal>
+            <div class="sg-reveal-block" data-region="lyonnais">
+              <span class="caps">Lyonnais — Reveal Block II</span>
+            </div>
+          </Reveal>
+          <Reveal>
+            <div class="sg-reveal-block" data-region="washoku">
+              <span class="caps">Washoku — Reveal Block III</span>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <RuleLine weight="strong" />
+      <footer class="sg-footer">
+        <p class="caps">Atlas Design System · M0.5 · The Regional Table</p>
+      </footer>
+
+    </div>
+
+    <style>
+      /* Styleguide-specific layout only — no token overrides */
+      body { background: var(--bg); color: var(--fg); }
+
+      .sg-container {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: var(--space-8) var(--gutter);
+      }
+      .sg-header {
+        margin-bottom: var(--space-7);
+      }
+      .sg-page-title {
+        font-family: var(--ff-serif);
+        font-size: var(--fs-h1);
+        line-height: var(--lh-h1);
+        margin-bottom: var(--space-2);
+      }
+      .sg-page-sub {
+        color: var(--rule-strong);
+        margin-bottom: var(--space-4);
+      }
+      .sg-section {
+        padding-block: var(--space-7);
+      }
+      .sg-caption {
+        color: var(--accent);
+        letter-spacing: var(--tracking-caps);
+        margin-bottom: var(--space-5);
+        font-size: var(--fs-caps);
+      }
+      .sg-label {
+        font-family: var(--ff-sans);
+        font-size: var(--fs-sm);
+        color: var(--rule-strong);
+        margin-bottom: var(--space-2);
+        margin-top: var(--space-4);
+      }
+      .sg-type-demo {
+        margin-block: var(--space-4);
+      }
+      .sg-region-box {
+        padding: var(--space-4);
+        background: var(--bg);
+        border: 1px solid var(--rule-faint);
+        border-radius: 4px;
+      }
+      .sg-path-anchor {
+        background: var(--bg);
+        color: var(--rule-strong);
+        padding: var(--space-1) var(--space-3);
+        border: 1px solid var(--rule-faint);
+        border-radius: 2px;
+        font-size: var(--fs-caps);
+        z-index: 1;
+        position: relative;
+      }
+      .sg-duotone-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: var(--space-4);
+        margin-top: var(--space-4);
+      }
+      .sg-duotone-cell {}
+      .sg-duotone-label {
+        color: var(--rule-strong);
+        margin-bottom: var(--space-2);
+      }
+      .sg-palette-region {
+        margin-bottom: var(--space-5);
+        padding: var(--space-4);
+        background: var(--bg);
+        border: 1px solid var(--rule-faint);
+        border-radius: 4px;
+      }
+      .sg-palette-region-label {
+        color: var(--fg);
+        margin-bottom: var(--space-3);
+        font-size: var(--fs-sm);
+      }
+      .sg-palette-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-4);
+        align-items: flex-end;
+      }
+      .sg-swatch-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-1);
+      }
+      .sg-swatch {
+        width: 48px;
+        height: 48px;
+        border-radius: 4px;
+      }
+      .sg-swatch-label {
+        font-size: 0.65rem;
+        color: var(--rule-strong);
+        letter-spacing: 0.05em;
+      }
+      .sg-note {
+        background: color-mix(in srgb, var(--bg) 90%, var(--rule) 10%);
+        border-left: 3px solid var(--rule);
+        padding: var(--space-4) var(--space-5);
+        font-size: var(--fs-sm);
+        color: var(--fg);
+        line-height: var(--lh-lede);
+      }
+      .sg-note p { margin-bottom: var(--space-3); }
+      .sg-note p:last-child { margin-bottom: 0; }
+      .sg-note code {
+        font-family: monospace;
+        background: color-mix(in srgb, var(--bg) 80%, var(--rule) 20%);
+        padding: 1px 4px;
+        border-radius: 2px;
+        font-size: 0.85em;
+      }
+      .sg-note kbd {
+        font-family: monospace;
+        border: 1px solid var(--rule);
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-size: 0.85em;
+      }
+      .sg-reveal-block {
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg);
+        border: 1px solid var(--rule-faint);
+        border-radius: 4px;
+        color: var(--fg);
+      }
+      .sg-footer {
+        padding-block: var(--space-6);
+        text-align: center;
+        color: var(--rule-strong);
+        font-size: var(--fs-caps);
+      }
+    </style>
+  </body>
+</html>

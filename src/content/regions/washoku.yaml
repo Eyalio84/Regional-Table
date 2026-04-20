@@ -1,0 +1,140 @@
+id: washoku
+displayName: "Japan (Washoku)"
+cuisineFamily: Japanese
+expertVoice: "Shokunin Master"
+coordinates:
+  lat: 35.68
+  lon: 139.69
+  city: Tokyo
+
+voiceDescription: >
+  A Japanese shokunin — a master artisan who has dedicated forty years to a single discipline.
+  Patient but exacting. Speaks with quiet authority, never raising his voice, but his silences
+  when you skip a step carry more weight than any lecture. He references shun (seasonal
+  awareness) as instinctively as breathing, invokes the shokunin spirit not as philosophy but as
+  lived practice, and measures progress in decades, not weeks. He uses Japanese terms naturally
+  with brief English explanations — not to exclude, but because the Japanese word carries meaning
+  the English cannot. Think of a sushi master who spent ten years washing rice and preparing
+  vegetables before being allowed to stand at the counter. He has opinions about your knife care,
+  your dashi, and the temperature of your rice — and he is correct about all of them. His kitchen
+  smells of kombu, freshly shaved katsuobushi, and the faintest trace of yuzu. He does not rush.
+  He does not improvise. He refines.
+
+voiceQuote: "Welcome. Sit quietly. Tell me what you wish to understand — I will show you what you have been doing wrong."
+
+shortBlurb: "Technique as devotion, nature as calendar — the art of not interrupting perfection."
+
+legendaryTechniques:
+  - name: "Awase Dashi"
+    skillLevel: beginner
+    description: >
+      Awase dashi is the invisible backbone of Japanese cuisine — miso soup, simmered dishes,
+      tempura dipping sauce, and kaiseki preparations all flow from this foundational stock of
+      kombu and katsuobushi.
+  - name: "Sushi Rice (Shari)"
+    skillLevel: intermediate
+    description: >
+      At Sukiyabashi Jiro, apprentices spend up to ten years on preparation tasks before being
+      allowed to make shari. This is not hazing — it is because shari is that difficult to get right.
+  - name: "Tempura"
+    skillLevel: intermediate
+    description: >
+      Tempura was introduced by Portuguese Jesuit missionaries in the 16th century. The batter must
+      be mixed minimally — lumps are correct, not a mistake. Cold water and minimal gluten development
+      are the technical imperatives.
+  - name: "Tonkatsu"
+    skillLevel: beginner
+    description: >
+      Tonkatsu belongs to yoshoku — the category of Western dishes Japan adopted and transformed into
+      something entirely its own. It descends from European pork cutlets but the panko crust and the
+      angle of the knife are Japanese innovations.
+  - name: "Ramen Broth (Tonkotsu)"
+    skillLevel: advanced
+    description: >
+      Tonkotsu ramen from Fukuoka/Hakata represents the most obsessive end of Japanese food culture.
+      The broth is made by boiling pork bones at a violent, rolling boil for 12–18 hours — the
+      opposite of Western stock-making.
+
+integrityLines:
+  - rule: "Rice must never touch the soy sauce when eating nigiri — turn the piece fish-side down"
+    severity: absolute
+  - rule: "Wasabi is never mixed into soy sauce at a proper sushi counter — it is applied directly to the fish by the chef"
+    severity: absolute
+  - rule: "Dashi must never be made from boiled kombu — remove the kombu just before the water boils or accept bitterness as your punishment"
+    severity: absolute
+  - rule: "Miso must never be boiled — dissolve it off the heat to preserve the living koji cultures and volatile aromatics"
+    severity: absolute
+  - rule: "Sushi rice must be at body temperature, never refrigerated — cold shari is stiff, muted, and an insult to the guest"
+    severity: absolute
+  - rule: "Knives are never placed in a sink or dishwasher — they are washed by hand, dried immediately, and stored with care"
+    severity: absolute
+  - rule: "Never stick chopsticks vertically into rice — this is how offerings are made to the dead at funerals"
+    severity: absolute
+  - rule: "Never pass food from chopstick to chopstick — this mimics the funeral ritual of passing cremated bones"
+    severity: absolute
+  - rule: "Ingredients must be served at their shun (seasonal peak) — serving out of season shows disrespect for both ingredient and guest"
+    severity: strong
+  - rule: "Never tip in Japan — exceptional service is the baseline expectation, not an achievement worthy of a bonus"
+    severity: strong
+  - rule: "Eat nigiri within 10–30 seconds of being placed before you — the chef has calibrated temperature, seasoning, and texture for this moment"
+    severity: strong
+
+legendaryChefs:
+  - name: "Jiro Ono"
+    era: "b. 1925"
+    significance: >
+      Sukiyabashi Jiro, Ginza. Three Michelin stars for years; subject of "Jiro Dreams of Sushi."
+      Still working past ninety-five. The reference for shari temperature and knife economy.
+  - name: "Yoshihiro Murata"
+    era: "b. 1951"
+    significance: >
+      Kikunoi, Kyoto. Third-generation kaiseki master. Codified umami research and the ichi-ju
+      sansai meal structure for a generation of chefs outside Japan.
+  - name: "Seiji Yamamoto"
+    era: "b. 1970"
+    significance: >
+      Nihonryori RyuGin, Tokyo. Traditional kaiseki rebuilt around scientific analysis of fish
+      rigor and dashi extraction. One of the few chefs to earn three stars in both Tokyo and Hong Kong.
+  - name: "Masaharu Morimoto"
+    era: "b. 1955"
+    significance: >
+      Iron Chef. Trained as a sushi apprentice in Hiroshima before being allowed to touch fish.
+      Brought washoku vocabulary — shun, umami, ichiju-sansai — to a global audience.
+
+seasonalCalendar:
+  spring:
+    - "Bamboo shoots, sansai (mountain vegetables), cherry blossom shrimp, tai (sea bream)"
+    - "Sakura mochi (cherry leaf-wrapped pink rice cake)"
+    - "Hashiri phase of many ingredients — delicate, tentative character"
+  summer:
+    - "Unagi (eel) for stamina, iwashi (sardines), goya (bitter gourd), edamame"
+    - "Mizu yokan (cold sweet bean jelly)"
+    - "Hiyashi chuka (cold ramen)"
+    - "Kakigori (shaved ice)"
+  autumn:
+    - "Sanma (Pacific saury), matsutake mushrooms, chestnuts, kabocha, persimmon"
+    - "Chestnut wagashi"
+    - "The most celebrated shun season — earthy richness"
+  winter:
+    - "Buri (yellowtail) at its transcendent peak, fugu (blowfish), oysters, snow crab"
+    - "Nabe (hot pot) season"
+    - "Oden simmering at convenience stores and street stalls"
+    - "Osechi ryori (New Year's feast)"
+  year_round:
+    - "Rice (always)"
+    - "Miso soup (always)"
+    - "Dashi (the invisible constant)"
+    - "Green tea (always free, always refilled)"
+
+culturalNote: >
+  Washoku was inscribed on the UNESCO Intangible Cultural Heritage list in 2013 — the first
+  national cuisine to receive this designation. The shokunin spirit holds that mastery is never
+  achieved; one simply becomes less wrong over decades.
+
+sacredIngredients:
+  - "Kombu (Dried Kelp)"
+  - "Katsuobushi (Dried Bonito)"
+  - "Japanese Short-Grain Rice (Koshihikari)"
+  - "Real Wasabi (Hon-Wasabi)"
+  - "Hon-Mirin (True Sweet Rice Wine)"
+  - "Shichimi Togarashi (Seven-Spice Blend)"

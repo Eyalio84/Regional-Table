@@ -1,0 +1,217 @@
+---
+/**
+ * about.astro — Architecture disclosure / colophon-style About page.
+ *
+ * Sections:
+ *   1. What this is — editorial explanation of the publication + architecture
+ *   2. How the voices work — knowledge graph description, plain language
+ *   3. Why editorial, not app — deliberate publication-over-product framing
+ *   4. About the architecture — agency link + attribution
+ *
+ * Copy must pass check-copy.sh (no forbidden phrases from POSITIONING.md).
+ * Layout: BaseLayout region="neutral", readable container (680px max), vertical rhythm.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RuleLine from '../components/atlas/RuleLine.astro';
+import CoordinateStrip from '../components/atlas/CoordinateStrip.astro';
+---
+
+<BaseLayout
+  title="About — The Regional Table"
+  description="The Regional Table is a working instance of a specialized expert persona architecture. Five regional cuisine experts, five knowledge graphs, one editorial publication."
+  region="neutral"
+>
+  <div class="about-page container readable">
+
+    <CoordinateStrip lat={0} lon={0} regionName="ABOUT" />
+
+    <!-- Section 1 — What this is -->
+    <section class="about-section">
+      <h1 class="about-h1">
+        The Regional Table is a working instance of a specialized expert persona architecture.
+      </h1>
+
+      <p class="about-body">
+        Five regional cuisine experts each carry a voice, a knowledge graph, and an opinion.
+        The site lets you browse recipes anchored to place and consult each expert directly.
+        It is also a demonstration &mdash; the same pattern underlies the agency&rsquo;s work
+        on Football-AI and other specialized-expert products built for clients who need a voice
+        that knows something specific, deeply, and refuses to pretend otherwise.
+      </p>
+
+      <p class="about-body">
+        The five regions are Naples (Neapolitan), Lyon (Lyonnais), New Orleans (Cajun &amp; Creole),
+        New York City (Street Food), and Japan (Washoku). Each has one expert voice. Each voice
+        has strong opinions about what you are doing wrong.
+      </p>
+    </section>
+
+    <RuleLine weight="hair" />
+
+    <!-- Section 2 — How the voices work -->
+    <section class="about-section">
+      <h2 class="about-h2">How the voices work</h2>
+
+      <p class="about-body">
+        Each region holds a knowledge graph of techniques, rivalries, integrity lines, sacred
+        ingredients, and seasonal awareness. When you ask the Nonna about rag&ugrave;, she pulls
+        from the Neapolitan graph &mdash; not a generic recipe database. She knows that rag&ugrave;
+        napoletano is a Sunday dish that begins at 6am and takes eight hours minimum. She knows
+        you cannot rush it. She knows the difference between a San Marzano DOP and an ordinary
+        tinned tomato, and she will tell you.
+      </p>
+
+      <p class="about-body">
+        The knowledge graph includes what the chef considers an integrity line: a rule where
+        crossing it is not a matter of preference but of kind. The Washoku Shokunin does not
+        allow kombu to boil &mdash; he will say so, plainly, and explain why. These lines come
+        from the region&rsquo;s own culinary tradition, not from a general cooking style guide.
+      </p>
+
+      <p class="about-body">
+        The chat is backed by Claude Haiku 4.5 with a persona-bridge layer. The persona bridge
+        injects the region&rsquo;s knowledge graph and voice profile into each request. No
+        buzzwords &mdash; just a system prompt that says: you are this person, this is what you
+        know, this is what you will not compromise on.
+      </p>
+    </section>
+
+    <RuleLine weight="hair" />
+
+    <!-- Section 3 — Why editorial, not app -->
+    <section class="about-section">
+      <h2 class="about-h2">Why editorial, not app</h2>
+
+      <p class="about-body">
+        The decision to build The Regional Table as an editorial publication rather than a
+        recipe-app interface was deliberate. An app asks you to search. A publication asks you
+        to read. Those are different relationships to knowledge.
+      </p>
+
+      <p class="about-body">
+        A recipe-app UI optimises for speed of access &mdash; find the dish, get the steps,
+        close the app. That is fine for a different kind of product. This one is interested in
+        something else: the opinion behind the recipe. Why the Lyonnais chef will not accept
+        industrial stock. Why the Cajun grandmother measures the roux by smell and color, not
+        by minutes. Why the NYC street food veteran has strong feelings about the fold of a
+        slice. These are not search results. They are voices.
+      </p>
+
+      <p class="about-body">
+        Editorial design &mdash; the hairline rules, the coordinate strips, the serif typography,
+        the atlas grid &mdash; signals to the reader that this is a publication with a point of
+        view, not a utility. The design earns the voice. The voice earns the trust.
+      </p>
+    </section>
+
+    <RuleLine weight="hair" />
+
+    <!-- Section 4 — About the architecture -->
+    <section class="about-section">
+      <h2 class="about-h2">About the architecture</h2>
+
+      <p class="about-body">
+        The Regional Table is built and maintained by
+        <a href="https://verbalogix.com" class="about-link" rel="noopener">Verbalogix</a>,
+        a web and AI agency. The specialized expert persona pattern demonstrated here is available
+        as a foundation for client projects &mdash; sports analytics, professional trades,
+        domain-specific advisory, and other areas where a generic AI voice is the wrong voice.
+      </p>
+
+      <p class="about-body about-attribution">
+        Architecture by Eyal Nof. Voices researched and authored by the editorial team.
+      </p>
+    </section>
+
+    <RuleLine weight="strong" />
+
+    <nav class="about-nav" aria-label="Site navigation">
+      <a href="/" class="about-nav__link caps">Cover</a>
+      <span class="about-nav__sep" aria-hidden="true">&middot;</span>
+      <a href="/regions/" class="about-nav__link caps">Regions</a>
+      <span class="about-nav__sep" aria-hidden="true">&middot;</span>
+      <a href="/recipes/" class="about-nav__link caps">Recipes</a>
+      <span class="about-nav__sep" aria-hidden="true">&middot;</span>
+      <a href="/ask" class="about-nav__link caps">Ask the Master Chef</a>
+      <span class="about-nav__sep" aria-hidden="true">&middot;</span>
+      <a href="/colophon" class="about-nav__link caps">Colophon</a>
+    </nav>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .about-page {
+    padding-block: var(--space-7) var(--space-10);
+  }
+  .readable {
+    max-width: 680px;
+  }
+
+  .about-section {
+    padding-block: var(--space-7) var(--space-5);
+  }
+
+  .about-h1 {
+    font-family: var(--ff-serif);
+    font-size: clamp(1.35rem, 3.5vw, 2rem);
+    font-weight: 400;
+    color: var(--fg);
+    line-height: 1.3;
+    margin: 0 0 var(--space-6);
+    font-style: italic;
+  }
+
+  .about-h2 {
+    font-family: var(--ff-sans);
+    font-size: var(--fs-caps);
+    font-weight: 500;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--rule-strong);
+    margin: 0 0 var(--space-5);
+  }
+
+  .about-body {
+    font-family: var(--ff-serif);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--fg);
+    margin: 0 0 var(--space-5);
+  }
+  .about-body:last-child { margin-bottom: 0; }
+
+  .about-attribution {
+    color: var(--rule-strong);
+    font-style: italic;
+  }
+
+  .about-link {
+    color: var(--fg);
+    border-bottom: 1px solid var(--rule-faint);
+    text-decoration: none;
+    padding-bottom: 1px;
+    transition: color 150ms ease, border-color 150ms ease;
+  }
+  .about-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .about-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    padding-block: var(--space-5);
+  }
+  .about-nav__link {
+    font-size: var(--fs-caps);
+    letter-spacing: var(--tracking-caps);
+    color: var(--rule-strong);
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+  .about-nav__link:hover { color: var(--accent); }
+  .about-nav__sep { color: var(--rule); }
+</style>

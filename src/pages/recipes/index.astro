@@ -1,0 +1,224 @@
+---
+/**
+ * recipes/index.astro — Recipe listing page.
+ *
+ * Reads all recipe entries from the content collection (0-N). Handles empty
+ * gracefully — renders an empty-state message before Opus authors MDX files.
+ * Displays:
+ *   - CoordinateStrip header labelled "THE RECIPE INDEX"
+ *   - Region filter chips (links to /regions/[slug])
+ *   - Grid of recipe cards: hero thumbnail, title, plate number, region, metadata
+ *
+ * Empty-state message renders when no recipes are authored yet (pre-M2 content).
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CoordinateStrip from '../../components/atlas/CoordinateStrip.astro';
+import RuleLine from '../../components/atlas/RuleLine.astro';
+import { ALL_REGIONS } from '../../lib/regions';
+import type { RegionSlug } from '../../lib/regions';
+
+const recipes = await getCollection('recipes');
+
+// Sort by plateNumber asc, then by title
+const sorted = [...recipes].sort((a, b) =>
+  a.data.plateNumber - b.data.plateNumber ||
+  a.data.title.localeCompare(b.data.title)
+);
+
+// Region display names (matches content collection)
+const REGION_LABELS: Record<RegionSlug, string> = {
+  'neapolitan':      'Neapolitan',
+  'lyonnais':        'Lyonnais',
+  'cajun-creole':    'Cajun-Creole',
+  'nyc-street-food': 'NYC Street Food',
+  'washoku':         'Washoku',
+};
+
+function toRoman(n: number): string {
+  const vals = [1000,900,500,400,100,90,50,40,10,9,5,4,1];
+  const syms = ['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I'];
+  let result = '';
+  for (let i = 0; i < vals.length; i++) {
+    while (n >= vals[i]) { result += syms[i]; n -= vals[i]; }
+  }
+  return result;
+}
+---
+
+<BaseLayout
+  title="The Recipe Index — The Regional Table"
+  description="Every recipe in The Regional Table, anchored to place. Ragù Napoletano, Dashi, and more — each authored by the expert who grew up with it."
+  region="neutral"
+>
+  <div class="recipe-index container">
+
+    <CoordinateStrip
+      lat={0}
+      lon={0}
+      regionName="THE RECIPE INDEX"
+    />
+
+    <!-- Region filter chips -->
+    <nav class="region-filter" aria-label="Filter by region">
+      <span class="caps region-filter__label">Region:</span>
+      {ALL_REGIONS.map((slug) => (
+        <a
+          href={`/regions/${slug}`}
+          class="region-filter__chip caps"
+          data-region-chip={slug}
+        >
+          {REGION_LABELS[slug]}
+        </a>
+      ))}
+    </nav>
+
+    <RuleLine weight="strong" />
+
+    {sorted.length === 0 ? (
+      <!-- Empty state — recipes authored in M2 -->
+      <div class="recipe-index__empty">
+        <p class="recipe-index__empty-head">Recipes coming soon.</p>
+        <p class="recipe-index__empty-sub caps">
+          Ragù Napoletano · Dashi — and three more to follow.
+        </p>
+      </div>
+    ) : (
+      <ol class="recipe-grid" aria-label="All recipes">
+        {sorted.map((recipe) => {
+          const slug = recipe.data.slug ?? recipe.id;
+          const regionSlug = recipe.data.region as RegionSlug;
+          return (
+            <li class="recipe-card" data-region={regionSlug}>
+              <a href={`/recipes/${slug}`} class="recipe-card__link">
+                <div class="recipe-card__thumb">
+                  <img
+                    src={recipe.data.heroImage}
+                    alt={recipe.data.title}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <div class="recipe-card__body">
+                  <p class="caps recipe-card__plate">
+                    Plate {toRoman(recipe.data.plateNumber)}
+                    <span class="recipe-card__sep"> · </span>
+                    {REGION_LABELS[regionSlug]}
+                  </p>
+                  <h2 class="recipe-card__title">{recipe.data.title}</h2>
+                  <p class="caps recipe-card__meta">
+                    {recipe.data.time.total} · {recipe.data.difficulty}
+                  </p>
+                </div>
+              </a>
+            </li>
+          );
+        })}
+      </ol>
+    )}
+
+  </div>
+</BaseLayout>
+
+<style>
+  .recipe-index {
+    padding-block: var(--space-6) var(--space-9);
+  }
+
+  /* Region filter */
+  .region-filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    padding-block: var(--space-5);
+  }
+  .region-filter__label {
+    color: var(--rule-strong);
+    letter-spacing: var(--tracking-caps);
+  }
+  .region-filter__chip {
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    color: var(--fg);
+    text-decoration: none;
+    letter-spacing: var(--tracking-caps);
+    font-size: var(--fs-caps);
+    transition: border-color 150ms ease, color 150ms ease;
+  }
+  .region-filter__chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Recipe grid */
+  .recipe-grid {
+    list-style: none;
+    margin: var(--space-7) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-7);
+  }
+
+  /* Recipe card */
+  .recipe-card__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+  .recipe-card__link:hover .recipe-card__title {
+    color: var(--accent);
+  }
+  .recipe-card__thumb {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    margin-bottom: var(--space-4);
+  }
+  .recipe-card__thumb :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .recipe-card__body { padding-inline: var(--space-1); }
+  .recipe-card__plate {
+    color: var(--rule-strong);
+    letter-spacing: var(--tracking-caps);
+    margin: 0 0 var(--space-2);
+    font-size: var(--fs-caps);
+  }
+  .recipe-card__sep { color: var(--rule); }
+  .recipe-card__title {
+    font-family: var(--ff-serif);
+    font-size: var(--fs-h3);
+    color: var(--fg);
+    margin: 0 0 var(--space-2);
+    line-height: 1.2;
+    transition: color 150ms ease;
+  }
+  .recipe-card__meta {
+    color: var(--rule-strong);
+    font-size: var(--fs-caps);
+    letter-spacing: var(--tracking-caps);
+    margin: 0;
+  }
+
+  /* Empty state */
+  .recipe-index__empty {
+    padding-block: var(--space-9);
+    text-align: center;
+  }
+  .recipe-index__empty-head {
+    font-family: var(--ff-serif);
+    font-size: var(--fs-h2);
+    color: var(--fg);
+    margin: 0 0 var(--space-3);
+  }
+  .recipe-index__empty-sub {
+    color: var(--rule-strong);
+    letter-spacing: var(--tracking-caps);
+    margin: 0;
+  }
+</style>

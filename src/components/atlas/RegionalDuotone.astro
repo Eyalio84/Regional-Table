@@ -1,0 +1,51 @@
+---
+/**
+ * RegionalDuotone.astro — wraps an <img> with per-region duotone treatment.
+ *
+ * Uses SVG feColorMatrix via filter: url(#duotone-{region}). Filter defs
+ * live in DuotoneFilters.astro which is mounted once in BaseLayout.
+ *
+ * DO NOT use for recipe or region hero images — heroes are full-color per
+ * the plan's photo treatment decision. Apply duotone only to body/process
+ * photos (cultural context shots, in-article process images).
+ */
+
+type RegionId = 'neapolitan' | 'lyonnais' | 'cajun-creole' | 'nyc-street-food' | 'washoku' | 'neutral';
+
+interface Props {
+  src: string;
+  alt: string;
+  region: RegionId;
+  width?: number;
+  height?: number;
+}
+
+const { src, alt, region, width, height } = Astro.props;
+const filterId = `duotone-${region}`;
+---
+
+<div class="duotone-wrap" data-region-duotone={region}>
+  <img
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    class="duotone-wrap__img"
+    style={`filter: url(#${filterId});`}
+    loading="lazy"
+    decoding="async"
+  />
+</div>
+
+<style>
+  .duotone-wrap {
+    display: block;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  .duotone-wrap__img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>

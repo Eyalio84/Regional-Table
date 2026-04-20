@@ -1,0 +1,131 @@
+---
+/**
+ * RegionHero.astro — hero section for region landing pages.
+ *
+ * Renders: CoordinateStrip → wordmark → expert voice label → voice quote → attribution.
+ * No interactive elements. Pure editorial display.
+ * Plate number is omitted on region pages (plates are per-recipe).
+ *
+ * Props:
+ *   regionSlug   — e.g. 'neapolitan'
+ *   displayName  — e.g. 'Naples (Neapolitan)'
+ *   expertVoice  — e.g. 'Neapolitan Nonna'
+ *   voiceQuote   — 1-sentence opening quote in character
+ *   coordinates  — { lat, lon, city }
+ */
+
+import CoordinateStrip from './CoordinateStrip.astro';
+import type { RegionSlug } from '../../lib/regions';
+
+interface Props {
+  regionSlug: RegionSlug;
+  displayName: string;
+  expertVoice: string;
+  voiceQuote: string;
+  coordinates: { lat: number; lon: number; city: string };
+}
+
+const { regionSlug, displayName, expertVoice, voiceQuote, coordinates } = Astro.props;
+
+// Build the attribution label: "Neapolitan Nonna" → "LA NONNA · NAPLES"
+// Simple heuristic: take last word(s) of expertVoice for the label, fallback to full name caps.
+const voiceLabel = expertVoice.toUpperCase();
+const cityUpper = coordinates.city.toUpperCase();
+---
+
+<header class="region-hero" data-region-hero={regionSlug}>
+  <CoordinateStrip
+    lat={coordinates.lat}
+    lon={coordinates.lon}
+    regionName={coordinates.city}
+  />
+
+  <div class="region-hero__wordmark">
+    <h1 class="region-hero__name display">{displayName}</h1>
+  </div>
+
+  <p class="region-hero__voice caps">{voiceLabel} · {cityUpper}</p>
+
+  <blockquote class="region-hero__quote lede">
+    {voiceQuote}
+  </blockquote>
+
+  <div class="region-hero__attribution">
+    <span class="hairline region-hero__hairline"></span>
+    <p class="region-hero__attr-text caps">— {voiceLabel}</p>
+  </div>
+</header>
+
+<style>
+  .region-hero {
+    padding-block: var(--space-9);
+  }
+
+  .region-hero__wordmark {
+    margin-top: var(--space-6);
+  }
+
+  .region-hero__name {
+    color: var(--accent);
+    letter-spacing: var(--tracking-display);
+    line-height: var(--lh-display);
+    max-width: var(--content-width);
+  }
+
+  .region-hero__voice {
+    margin-top: var(--space-4);
+    color: var(--rule-strong);
+    letter-spacing: var(--tracking-caps);
+  }
+
+  .region-hero__quote {
+    margin: var(--space-6) 0 0 0;
+    max-width: var(--readable-width);
+    font-family: var(--ff-serif);
+    font-size: var(--fs-lede);
+    font-style: italic;
+    line-height: var(--lh-lede);
+    color: var(--fg);
+    quotes: "\201C" "\201D" "\2018" "\2019";
+  }
+
+  .region-hero__quote::before {
+    content: open-quote;
+    color: var(--accent);
+    font-size: calc(var(--fs-lede) * 1.5);
+    line-height: 0;
+    vertical-align: -0.25em;
+    margin-right: 0.05em;
+  }
+
+  .region-hero__quote::after {
+    content: close-quote;
+    color: var(--accent);
+    font-size: calc(var(--fs-lede) * 1.5);
+    line-height: 0;
+    vertical-align: -0.25em;
+    margin-left: 0.05em;
+  }
+
+  .region-hero__attribution {
+    margin-top: var(--space-5);
+    max-width: var(--readable-width);
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .region-hero__hairline {
+    flex: 1;
+    display: block;
+    height: var(--rule-width);
+    background-color: var(--rule);
+    border: 0;
+  }
+
+  .region-hero__attr-text {
+    margin: 0;
+    color: var(--rule-strong);
+    flex-shrink: 0;
+  }
+</style>

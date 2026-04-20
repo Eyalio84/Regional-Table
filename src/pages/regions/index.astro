@@ -1,0 +1,143 @@
+---
+/**
+ * regions/index.astro — The Five Kitchens index.
+ *
+ * Page header + atlas map + 5 region cards linking to dynamic pages.
+ * data-region="neutral" (default) — no per-region theme active here.
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CoordinateStrip from '../../components/atlas/CoordinateStrip.astro';
+import MapSVG from '../../components/atlas/MapSVG.astro';
+import RuleLine from '../../components/atlas/RuleLine.astro';
+
+const regions = await getCollection('regions');
+
+// Display order matches ALL_REGIONS from lib/regions.ts
+const ORDER = ['neapolitan', 'lyonnais', 'cajun-creole', 'nyc-street-food', 'washoku'];
+const sorted = [...regions].sort(
+  (a, b) => ORDER.indexOf(a.data.id) - ORDER.indexOf(b.data.id)
+);
+---
+
+<BaseLayout
+  title="The Five Kitchens — The Regional Table"
+  description="Five regional cuisines. Five expert voices. Neapolitan, Lyonnais, Cajun-Creole, NYC Street-Food, Washoku."
+  region="neutral"
+>
+  <div class="container">
+    <!-- Page strip header -->
+    <div class="kitchens-header">
+      <CoordinateStrip lat={20} lon={0} regionName="The Regional Table" />
+      <h1 class="kitchens-title display">The Five Kitchens</h1>
+      <p class="kitchens-sub caps">Five regions · Five voices · One editorial table</p>
+    </div>
+
+    <RuleLine weight="strong" />
+
+    <!-- Atlas map — centrepiece navigation -->
+    <div class="kitchens-map">
+      <MapSVG />
+    </div>
+
+    <RuleLine weight="dotted" label="SELECT A REGION" />
+
+    <!-- Region cards grid -->
+    <section class="kitchens-grid">
+      {sorted.map((r) => (
+        <a href={`/regions/${r.data.id}`} class="region-card">
+          <div class="region-card__inner">
+            <h2 class="region-card__name">{r.data.displayName}</h2>
+            <p class="region-card__blurb">{r.data.shortBlurb}</p>
+            <p class="region-card__voice caps">{r.data.expertVoice}</p>
+            <span class="region-card__cta caps">Explore →</span>
+          </div>
+        </a>
+      ))}
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .kitchens-header {
+    padding-top: var(--space-7);
+    padding-bottom: var(--space-5);
+  }
+
+  .kitchens-title {
+    margin-top: var(--space-5);
+    color: var(--fg);
+  }
+
+  .kitchens-sub {
+    margin-top: var(--space-3);
+    color: var(--rule-strong);
+  }
+
+  .kitchens-map {
+    padding-block: var(--space-6);
+    display: flex;
+    justify-content: center;
+  }
+
+  .kitchens-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-5);
+    padding-block: var(--space-6) var(--space-9);
+  }
+
+  .region-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid var(--rule-faint);
+    border-top: 2px solid var(--rule);
+    transition:
+      border-color var(--motion-fast) var(--ease-deliberate),
+      box-shadow var(--motion-fast) var(--ease-deliberate);
+  }
+
+  .region-card:hover {
+    border-top-color: var(--accent);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  }
+
+  .region-card:hover .region-card__name {
+    color: var(--accent);
+  }
+
+  .region-card__inner {
+    padding: var(--space-5) var(--space-5) var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .region-card__name {
+    font-family: var(--ff-serif);
+    font-size: var(--fs-h2);
+    color: var(--fg);
+    transition: color var(--motion-fast) var(--ease-deliberate);
+    margin: 0;
+  }
+
+  .region-card__blurb {
+    font-size: var(--fs-sm);
+    line-height: var(--lh-lede);
+    color: var(--fg);
+    margin: 0;
+  }
+
+  .region-card__voice {
+    color: var(--rule-strong);
+    margin: 0;
+  }
+
+  .region-card__cta {
+    color: var(--accent);
+    font-size: var(--fs-caps);
+    letter-spacing: var(--tracking-caps);
+    margin-top: var(--space-2);
+  }
+</style>

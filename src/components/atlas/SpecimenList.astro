@@ -1,0 +1,84 @@
+---
+/**
+ * SpecimenList.astro — ingredients as numbered specimen entries.
+ * items: Array<{ quantity: string; name: string; note?: string }>
+ */
+
+interface SpecimenItem {
+  quantity: string;
+  name: string;
+  note?: string;
+}
+
+interface Props {
+  items: SpecimenItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<ol class="specimen-list">
+  {items.map((item, i) => (
+    <li class="specimen-list__row">
+      <div class="specimen-list__grid">
+        <span class="specimen-list__num caps" aria-hidden="true">
+          {String(i + 1).padStart(2, '0')}
+        </span>
+        <div class="specimen-list__content">
+          <span class="specimen-list__qty">{item.quantity}</span>
+          {' '}
+          <span class="specimen-list__name">{item.name}</span>
+          {item.note && (
+            <span class="specimen-list__note"> — {item.note}</span>
+          )}
+        </div>
+      </div>
+      <div class="hairline specimen-list__divider"></div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .specimen-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .specimen-list__row {
+    padding-block: var(--space-3);
+  }
+  .specimen-list__grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-4);
+    align-items: baseline;
+  }
+  .specimen-list__num {
+    color: var(--rule-strong);
+    font-variant-numeric: tabular-nums;
+    min-width: 2ch;
+  }
+  .specimen-list__qty {
+    font-family: var(--ff-sans);
+    font-weight: 500;
+    font-size: var(--fs-body);
+    color: var(--fg);
+  }
+  .specimen-list__name {
+    font-family: var(--ff-serif);
+    font-size: var(--fs-body);
+    color: var(--fg);
+  }
+  .specimen-list__note {
+    font-family: var(--ff-sans);
+    font-style: italic;
+    font-size: var(--fs-sm);
+    color: var(--rule-strong);
+  }
+  .specimen-list__divider {
+    margin-top: var(--space-3);
+  }
+  .specimen-list__row:last-child .specimen-list__divider {
+    display: none;
+  }
+</style>
