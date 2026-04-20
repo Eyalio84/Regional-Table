@@ -80,7 +80,7 @@ regional-table/
 │   │       ├── gumbo.mdx
 │   │       └── chopped-cheese.mdx
 │   ├── lib/
-│   │   ├── api.ts                     Typed client for Cuisine-Expert backend (M1)
+│   │   ├── api.ts                     Typed client + translation layer: {region_id, messages[]} → {region, message}; maps data.response → content; separates network from HTTP errors (M1; contract fix v1)
 │   │   └── regions.ts                 Slug adapter + region metadata (M1)
 │   └── styles/
 │       ├── global.css                 @import "tailwindcss"; + @theme block
@@ -228,7 +228,7 @@ Reads all recipe entries, sorts by `plateNumber` then title. Renders:
 
 #### API client: `src/lib/api.ts`
 
-Typed stub for the Cuisine-Expert backend at `cuisine-api.verbalogix.com` (deployed M6). `sendChatMessage(req)` is the only outbound call. Uses `PUBLIC_CUISINE_API_URL` env var with `localhost:8000` fallback. Client-side only — no build-time fetch.
+Typed client + translation layer between the frontend's conversation-history model and the backend's stateless single-message contract. `sendChatMessage(req)` accepts `{region_id, messages[]}` from the component, extracts the last user message, and POSTs `{region, message}` to `POST /api/v1/chat`. Maps `data.response` → `content` for the component. Separates network errors (fetch throws — server unreachable) from HTTP 4xx/5xx (server reached, returned an error) with independent `try/catch` blocks for accurate humanized error surfacing. Uses `PUBLIC_CUISINE_API_URL` env var with `localhost:8000` fallback. Client-side only — no build-time fetch.
 
 #### Dynamic route: `src/pages/regions/[slug].astro`
 
@@ -272,9 +272,15 @@ User loads a recipe page
        │
        └─ User sends a message
             │
-            └─ POST https://cuisine-api.verbalogix.com/api/v1/chat
-                 └─ FastAPI → Claude Haiku 4.5 (Cuisine-Expert backend)
-                      └─ Response streams back to chat panel
+            └─ api.ts extracts last user message from history array
+                 │   (frontend keeps full message history client-side for display;
+                 │    each send transmits only the latest user turn to the backend,
+                 │    which responds statelessly based on its KG + regional persona)
+                 │
+                 └─ POST https://cuisine-api.verbalogix.com/api/v1/chat
+                      │   body: {region, message} — backend's stateless contract
+                      └─ FastAPI → Claude Haiku 4.5 (Cuisine-Expert backend)
+                           └─ data.response mapped to content → chat panel
 ```
 
 ### Floating pill flow (site-wide, M0.5+)

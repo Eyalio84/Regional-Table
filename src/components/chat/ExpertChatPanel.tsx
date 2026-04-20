@@ -278,7 +278,13 @@ export default function ExpertChatPanel({ regionId, contextSeed, placeholder }: 
         },
       ]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Connection error");
+      const userMsg =
+        err != null && typeof err === 'object' && 'userMessage' in err
+          ? (err as { userMessage: string }).userMessage
+          : err instanceof Error
+            ? err.message
+            : "The chef isn't at the pass right now. Try again in a moment.";
+      setError(userMsg);
     } finally {
       setLoading(false);
     }

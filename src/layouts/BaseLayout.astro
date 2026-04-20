@@ -71,6 +71,9 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
         [data-hydrate] { display: block !important; }
       </style>
     </noscript>
+
+    <!-- Per-page head extras (structured data, etc.) -->
+    <slot name="head" />
   </head>
   <body data-region={region}>
     <DuotoneFilters />

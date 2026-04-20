@@ -9,7 +9,7 @@ An editorial food publication with embedded AI cooking experts. Five regional cu
 - **Stack:** Astro 5 (static output) · React islands · MDX · Tailwind CSS 4 (`@tailwindcss/vite`) · Google Fonts (DM Serif Display + DM Sans) · Cuisine-Expert FastAPI backend (separate repo)
 - **Project type:** Static editorial frontend. The only dynamic piece per page is the expert chat island, hydrated `client:visible`.
 - **Primary audience:** Internal AI sessions + Eyal
-- **Status: M0 → M4 complete + M-meta. Next milestone: M5 — backend additions (rate limiter, CORS, master pseudo-region, Dockerfile).**
+- **Status: M0 → M7 complete. v1 feature-complete. Next: git push to GitHub (see M6 task).**
 
 ## Run it
 
@@ -47,9 +47,9 @@ If you're starting M0.5, also read the phased plan's M0.5 section in full before
 
 ## Status snapshot
 
-Last updated: 2026-04-20 (end-of-day, M4 complete)
+Last updated: 2026-04-21 (v1 complete — frontend↔backend contract fix)
 
-**Done: M0 → M4 + M-meta + pre-launch audit fixes**
+**Done: M0 → M7 complete. v1 feature-complete.**
 
 - **M0** — Scaffold + SMM baseline (9 SMM artifacts)
 - **M0.5** — Atlas design system (12 primitives + `/styleguide`)
@@ -60,24 +60,17 @@ Last updated: 2026-04-20 (end-of-day, M4 complete)
 - **M4** — Homepage + About + Ask + Colophon + Floating Pill + real Wikimedia world map
 - **M-meta** — Updated INTERACTIVE-PLANNING-PATTERN.md with /frontend-design + Sonnet-delegation sections
 - **Pre-launch audit fixes** — Dockerfile, robots.txt, persistent SiteFooter, recipe↔region cross-links, chat a11y, 404.astro, MasterChefModal → client:idle
+- **M5** — Backend additions (rate limiter, CORS, master pseudo-region, Dockerfile, `/api/v1/regions/summary`)
+- **M7 + v1 polish** — sitemap, JSON-LD Recipe schema, humanized chat errors, agency demo card, pin label fix; frontend↔backend API contract fix in `src/lib/api.ts` (verified end-to-end: Nonna responds in voice)
 
-**Current state:** 18 static pages, build clean, check-copy clean, all 5 regions rendering with accurate duotones + per-region palette swap, real equirectangular world map on homepage with 339 country paths.
+**Current state:** 18 static pages, build clean, check-copy clean, all 5 regions rendering, chat verified end-to-end against live Cuisine-Expert backend.
 
-**Next: M5 — Backend additions**
-- Rate limiter middleware (10/hr/IP on `/api/v1/chat`, in-memory sliding window)
-- CORS config for `https://cuisine.verbalogix.com` + localhost:4321 dev
-- `/api/v1/regions/summary` endpoint
-- `region_id="master"` pseudo-region in persona bridge
-- Dockerfile for `cuisine-expert-api` service
-
-**After M5:**
-- **M6** — Deploy (requires explicit user confirmation before any Cloud Run write)
-- **M7** — Verification + agency demo-card update + portfolio integration
+**Next: M6 — git push to GitHub** (requires explicit user action — initialize repo and push)
 
 **Deferred to post-v1 (see `docs/POST-V1-ROADMAP.md`):**
+- Cloud Run deploy (M6 deploy task — user confirms before any gcloud write)
 - 4 additional region dossiers (Barcelona, Copenhagen, Brazil, Tuscan)
 - Full `SiteHeader.astro` + `RecipeCard.astro` shared components
-- `@astrojs/sitemap` + JSON-LD Recipe schema
 - OG image + DottedPath production wiring
 
 ## Three things most new readers miss

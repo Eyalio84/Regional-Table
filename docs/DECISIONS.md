@@ -6,6 +6,20 @@ See [`ARCHITECTURE.md`](ARCHITECTURE.md) for the resulting structure, and [`../C
 
 ---
 
+## v1 completion — contract fix (2026-04-21)
+
+---
+
+### Frontend-backend API contract mismatch resolved in api.ts — translation layer, not shape change
+
+- **Picked:** `src/lib/api.ts` accepts the frontend's speculative request shape (`{region_id, messages[]}`) unchanged, but internally translates to the backend's actual contract (`{region, message}` singular) and maps the response field (`data.response` → `content`). Also adds a separate `try/catch` around the `fetch()` call to distinguish network errors (server unreachable) from HTTP 4xx/5xx (server reached, bad request or error).
+- **Why:** The original shape in `api.ts` was authored in M1 without testing against a live backend. Build typechecks pass because both sides validate against their own interfaces. The mismatch only surfaces at runtime. Translating in the client layer lets us fix the bug with zero changes to the chat component (`ExpertChatPanel.tsx`) — the ported component keeps its conversation-history model; the backend stays stateless. Future: if the backend adopts a conversation-history model, only `api.ts` changes.
+- **Trade-off:** We send only the LATEST user message to the backend, not the full conversation history. For the current single-turn expert-answer model, that's fine — the regional persona + KG answer is independent of prior turns. If we later want cross-turn coherence (e.g., "what about the version you mentioned yesterday?"), we'd need either backend history support or a client-side concatenation trick.
+- **Rejected:** (a) Changing `ExpertChatPanel.tsx` to POST the backend's shape directly — coupled the display component to backend serialization; (b) changing the backend to accept `{region_id, messages[]}` — expensive refactor for no product benefit.
+- **Lesson for future expert-persona products:** contract-test the frontend↔backend boundary BEFORE declaring v1 complete. Integration bugs at this layer are invisible to build-time typechecks; both sides typecheck against their own (wrong) interface. A single successful `curl -X POST` against the real endpoint before declaring ship catches this in seconds.
+
+---
+
 ## Post-M4 audit fixes (2026-04-20)
 
 ---

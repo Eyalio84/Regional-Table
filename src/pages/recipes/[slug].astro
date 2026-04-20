@@ -45,6 +45,62 @@ const REGION_LABELS: Record<string, string> = {
   'washoku':         'Japan',
 };
 const regionLabel = REGION_LABELS[recipe.data.region] ?? recipe.data.region;
+
+/** Convert human-readable time strings like "5h 30m" or "30m" to ISO 8601 duration. */
+function toIso8601Duration(str: string): string {
+  const hoursMatch = str.match(/(\d+)\s*h/i);
+  const minsMatch  = str.match(/(\d+)\s*m/i);
+  const hours = hoursMatch ? parseInt(hoursMatch[1], 10) : 0;
+  const mins  = minsMatch  ? parseInt(minsMatch[1],  10) : 0;
+  if (hours > 0 && mins > 0) return `PT${hours}H${mins}M`;
+  if (hours > 0)             return `PT${hours}H`;
+  if (mins > 0)              return `PT${mins}M`;
+  return 'PT0M';
+}
+
+const REGION_EXPERT_VOICE: Record<string, string> = {
+  'neapolitan':      'Neapolitan Nonna',
+  'lyonnais':        'Lyonnais Chef',
+  'cajun-creole':    'Cajun-Creole Matriarch',
+  'nyc-street-food': 'NYC Street Food Veteran',
+  'washoku':         'Shokunin Master',
+};
+
+const REGION_CUISINE: Record<string, string> = {
+  'neapolitan':      'Italian',
+  'lyonnais':        'French',
+  'cajun-creole':    'Louisiana Creole',
+  'nyc-street-food': 'American Street',
+  'washoku':         'Japanese',
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Recipe',
+  name: recipe.data.title,
+  image: recipe.data.heroImage,
+  author: {
+    '@type': 'Person',
+    name: REGION_EXPERT_VOICE[recipe.data.region] ?? recipe.data.region,
+  },
+  datePublished: recipe.data.publishedAt
+    ? new Date(recipe.data.publishedAt).toISOString().split('T')[0]
+    : undefined,
+  description: recipe.data.seoDescription,
+  recipeIngredient: recipe.data.ingredients.map(
+    (i: { quantity: string; name: string; note?: string }) =>
+      `${i.quantity} ${i.name}${i.note ? ' (' + i.note + ')' : ''}`
+  ),
+  recipeInstructions: recipe.data.method.map(
+    (s: { step: string; tip?: string }) => ({ '@type': 'HowToStep', text: s.step })
+  ),
+  totalTime:  toIso8601Duration(recipe.data.time.total),
+  prepTime:   recipe.data.time.prep ? toIso8601Duration(recipe.data.time.prep) : undefined,
+  cookTime:   recipe.data.time.cook ? toIso8601Duration(recipe.data.time.cook) : undefined,
+  recipeYield: recipe.data.servings.toString(),
+  recipeCategory: 'Main course',
+  recipeCuisine: REGION_CUISINE[recipe.data.region] ?? recipe.data.region,
+};
 ---
 
 <BaseLayout
@@ -52,6 +108,7 @@ const regionLabel = REGION_LABELS[recipe.data.region] ?? recipe.data.region;
   description={recipe.data.seoDescription}
   region={recipe.data.region as any}
 >
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <article class="recipe-plate container">
 
     <!-- Coordinate strip with plate number -->

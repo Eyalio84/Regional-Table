@@ -4,4 +4,4 @@ Allow: /
 # Development + internal surfaces — not for search indexing
 Disallow: /styleguide
 
-Sitemap: https://cuisine.verbalogix.com/sitemap.xml
+Sitemap: https://cuisine.verbalogix.com/sitemap-index.xml

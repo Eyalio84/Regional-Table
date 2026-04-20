@@ -32,11 +32,11 @@ const { activePin } = Astro.props;
 // Per-region pin colors — mirror each region's --accent from tokens.css.
 // Visual discrimination: each pin carries its kitchen's identity, not a universal gold.
 const pins = [
-  { id: 'nyc-street-food', label: 'NYC',    x: 235.5, y: 109.5, slug: 'nyc-street-food', color: '#f5a623' }, // taxi yellow
-  { id: 'cajun-creole',    label: 'NOLA',   x: 199.8, y: 133.4, slug: 'cajun-creole',    color: '#8c2232' }, // brick
-  { id: 'lyonnais',        label: 'LYON',   x: 410.7, y:  98.3, slug: 'lyonnais',        color: '#6b0f1a' }, // bordeaux
-  { id: 'neapolitan',      label: 'NAPLES', x: 431.7, y: 109.2, slug: 'neapolitan',      color: '#c0392b' }, // Pompeii red
-  { id: 'washoku',         label: 'JAPAN',  x: 710.4, y: 120.7, slug: 'washoku',         color: '#2d2d2d' }, // sumi ink
+  { id: 'nyc-street-food', label: 'NYC',    x: 235.5, y: 109.5, slug: 'nyc-street-food', color: '#f5a623', labelOffset: -14 }, // taxi yellow
+  { id: 'cajun-creole',    label: 'NOLA',   x: 199.8, y: 133.4, slug: 'cajun-creole',    color: '#8c2232', labelOffset: -14 }, // brick
+  { id: 'lyonnais',        label: 'LYON',   x: 410.7, y:  98.3, slug: 'lyonnais',        color: '#6b0f1a', labelOffset: -14 }, // bordeaux — stays above pin
+  { id: 'neapolitan',      label: 'NAPLES', x: 431.7, y: 109.2, slug: 'neapolitan',      color: '#c0392b', labelOffset:  20 }, // Pompeii red — below pin to avoid Lyon overlap (~21 SVG units apart)
+  { id: 'washoku',         label: 'JAPAN',  x: 710.4, y: 120.7, slug: 'washoku',         color: '#2d2d2d', labelOffset: -14 }, // sumi ink
 ];
 ---
 
@@ -451,9 +451,10 @@ const pins = [
           class="map-pin__circle"
         />
         <text
-          x={pin.x} y={pin.y - 14}
+          x={pin.x} y={pin.y + pin.labelOffset}
           class="map-pin__label"
           text-anchor="middle"
+          dominant-baseline={pin.labelOffset > 0 ? "hanging" : "auto"}
           font-size="12"
           font-weight="600"
           fill="var(--ink)"

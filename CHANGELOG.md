@@ -1,5 +1,38 @@
 # Changelog — The Regional Table
 
+## v1 complete — polish + M7 (2026-04-21)
+
+Final verification and polish pass. All deliverables local-only (no backend required).
+
+### Delivered
+
+- **`astro.config.mjs`** — `@astrojs/sitemap` added to integrations array with `filter` excluding `/styleguide`. Generates `dist/sitemap-index.xml` (index) + `dist/sitemap-0.xml` (16 public URLs).
+
+- **`public/robots.txt`** — `Sitemap:` line updated from `sitemap.xml` to `sitemap-index.xml` to match Astro's generated filename.
+
+- **`src/pages/recipes/[slug].astro`** — JSON-LD `Recipe` structured data injected into `<head>` via `slot="head"`. Includes all Google-required fields: `name`, `image`, `author`, `datePublished`, `description`, `recipeIngredient`, `recipeInstructions`, `totalTime`/`prepTime`/`cookTime` (ISO 8601 via `toIso8601Duration()` helper), `recipeYield`, `recipeCategory`, `recipeCuisine`. Region→cuisine map hardcoded (5 regions).
+
+- **`src/layouts/BaseLayout.astro`** — `<slot name="head" />` added inside `<head>` to accept per-page head extras (used by recipe JSON-LD).
+
+- **`src/lib/api.ts`** — Raw `Chat API returned ${status}` error replaced with structured errors. Network/5xx → "The chef isn't at the pass right now. Try again in a moment." · 429 → "You've asked a lot of questions in a short time. The kitchen needs a breath — try again in an hour." · Other 4xx → "Something about that question didn't reach the kitchen. Try rephrasing." Raw status logged to `console.error` only.
+
+- **`src/components/chat/ExpertChatPanel.tsx`** — Error rendering updated: reads `err.userMessage` when present (set by `api.ts`), falls through to `err.message` and a final generic fallback.
+
+- **Frontend↔backend API contract fix in `src/lib/api.ts`** — translates `{region_id, messages[]}` → `{region, message}`; maps `data.response` → `content`; distinguishes network errors from HTTP errors. Chat now works end-to-end against the Cuisine-Expert backend (verified: Nonna responds in voice on ragù question).
+
+- **`src/components/atlas/MapSVG.astro`** — Pin label overlap fix: `labelOffset` field added to each pin (default −14 = above pin). Naples pin offset set to `+20` (label below pin) to prevent overlap with Lyon (only 21 SVG units apart horizontally, ~9.5px at mobile 360px viewport). `dominant-baseline="hanging"` applied when offset is positive.
+
+- **`~/verbalogix-agency/components/demo/DemoShowcase.tsx`** — Demo card #04 updated from "Local business site / coming" placeholder to "The Regional Table / live" with full copy, Astro/FastAPI/Knowledge Graph/Claude Haiku 4.5 tags, and `url: 'https://cuisine.verbalogix.com'`. Left uncommitted for user review.
+
+### Verification
+
+- `npm run build` passes: 18 pages, 0 errors. `dist/sitemap-index.xml` and `dist/sitemap-0.xml` generated (16 URLs, `/styleguide` excluded).
+- `./scripts/smoke.sh` — 24 pass, 0 fail.
+- `./scripts/check-copy.sh` — clean.
+- Curl matrix: / → 200 · /regions/neapolitan → 200 "Ragù" · /recipes/ragu-napoletano → 200 + back-link + JSON-LD · /404-test-path → 404 (custom 404.astro served) · sitemap confirmed in dist/.
+
+---
+
 ## Unreleased
 
 (Next milestone entries go here before a named release.)
