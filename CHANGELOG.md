@@ -1,5 +1,36 @@
 # Changelog — The Regional Table
 
+## Deploy — live at cuisine.verbalogix.com (2026-04-21)
+
+Same session as v1 polish completion. Production deploy to Google Cloud Run alongside `cuisine-expert-api` (backend) and `verbalogix-agency` (sister marketing site).
+
+### What shipped
+
+- **Cloud Run service:** `regional-table`, region `us-central1`, project `verbalogic-intake-interview`, revision `00002-n99` (cosmetic redeploy after backend URL was finalized).
+- **Custom domain:** `cuisine.verbalogix.com`, CNAME → `ghs.googlehosted.com` (GoDaddy DNS via API), HTTPS auto-provisioned by Cloud Run.
+- **Build pipeline:** existing Dockerfile (multi-stage, `node:22-alpine` build → `nginx:alpine` serve, port 8080). Build arg `PUBLIC_CUISINE_API_URL=https://cuisine-api.verbalogix.com` baked into the static bundle. Verified present in `dist/_astro/ExpertChatPanel.*.js` post-build.
+- **Local-build note:** PRoot Ubuntu was stuck on Node 20.20.2 (Astro 6 requires ≥22.12.0), so local sanity `npm run build` was blocked. Cloud Build uses the Dockerfile's internal Node 22, which worked cleanly. Workaround documented in case PRoot node is upgraded later.
+
+### Backend integration
+
+Frontend `PUBLIC_CUISINE_API_URL` originally pointed at the run.app URL pre-DNS (first deploy), then rebuilt against `https://cuisine-api.verbalogix.com` once DNS propagated (second deploy, revision 00002). No code changes between revisions — only the build arg.
+
+### Production smoke tests (independent verification)
+
+- `https://cuisine.verbalogix.com/` → HTTP 200, 110 KB, title `The Regional Table — No. I · MMXXVI`
+- `https://cuisine.verbalogix.com/recipes/ragu-napoletano/` → 200 (the golden M2 recipe)
+- `https://cuisine.verbalogix.com/ask/` → 200 (Master Chef surface)
+- SSL cert valid on cuisine.verbalogix.com (Cloud Run auto-provisioned after DNS resolved)
+- Chat island works end-to-end against production cuisine-api
+
+### Open / deferred
+
+- Cross-link regional-table demo card on verbalogix-agency → confirmed live as demo #05
+- Budget monitoring (GCP $25/month + Anthropic $25/month) set by Eyal post-session
+- Vertical-focus decision for outbound push (see `~/verbalogix-agency/docs/go-to-market.md` §4)
+
+---
+
 ## v1 complete — polish + M7 (2026-04-21)
 
 Final verification and polish pass. All deliverables local-only (no backend required).
